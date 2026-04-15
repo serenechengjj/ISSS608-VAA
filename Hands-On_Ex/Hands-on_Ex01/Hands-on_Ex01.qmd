@@ -26,7 +26,7 @@ ggplot(data = exam_data,
        aes(x = RACE)) + 
   geom_bar()
 ```
-# 1.3.1 R Graphics VS ggplot
+# R Graphics VS ggplot
 ## R Graphics
 ```{r}
 hist(exam_data$MATHS)
@@ -40,20 +40,6 @@ ggplot(data=exam_data, aes(x = MATHS)) +
                  color="black", 
                  fill="grey") +
   ggtitle("Distribution of Maths scores")
-```
-
-## Essential Grammatical Elements in ggplot2: data
-```{r}
-ggplot(data=exam_data)
-```
-
-A blank canvas appears.
-
-## Essential Grammatical Elements in ggplot2: Aesthetic mappings
-This will add the aesthetic mappings.
-```{r}
-ggplot(data=exam_data, 
-       aes(x= MATHS))
 ```
 
 ## Geometric Objects: geom_dotplot
