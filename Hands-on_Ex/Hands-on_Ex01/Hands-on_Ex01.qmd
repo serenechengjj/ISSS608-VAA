@@ -5,7 +5,9 @@ author: "Serene Cheng"
 
 # 1.1 Learning Outcome
 
-In this chapter, I learn the basic principles and essential components of ggplot2, while gaining hands-on experience in using them to create statistical graphics based on the Layered Grammar of Graphics. By the end of this chapter, I will be able to apply ggplot2’s key graphical elements to produce statistical charts that are both elegant and functional. \# 1.2 Getting Started
+In this chapter, I learn the basic principles and essential components of ggplot2, while gaining hands-on experience in using them to create statistical graphics based on the Layered Grammar of Graphics. By the end of this chapter, I will be able to apply ggplot2’s key graphical elements to produce statistical charts that are both elegant and functional.
+
+# 1.2 Getting Started
 
 ## 1.2.1 Installing and loading the required libraries
 
