@@ -2,6 +2,10 @@
 title: "ISSS608-VAA"
 ---
 
-Hello, my name is ***Serene Cheng***. Welcome to **ISSS608 Visual Analytics and Applications**. In this website, you will find my coursework prepared for this course. Credits to **Professor Kam Tin Seong** for his valuable lessons and the course materials!
+## Hello, my name is ***Serene Cheng***.
 
-If you're interested, you can navigate to the right to find out more about me!
+![](images/ChatGPT Image Apr 22, 2026, 04_37_30 PM.png){fig-align="left" width="500"}
+
+Welcome to **ISSS608 Visual Analytics and Applications**. In this website, you will find my coursework prepared for this course. Credits to **Professor Kam Tin Seong** for his valuable lessons and the course materials!
+
+If you're interested, you can navigate to the top right 'About' tab to find out more.

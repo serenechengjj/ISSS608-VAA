@@ -2,8 +2,4 @@
 title: "About"
 ---
 
-About this site
-
-```{r}
-1 + 1
-```
+A picture tells a thousand word - this is all about me in an image! ![](images/ChatGPT Image Apr 22, 2026, 05_46_51 PM.png)

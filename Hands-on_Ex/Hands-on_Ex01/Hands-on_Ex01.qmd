@@ -10,9 +10,9 @@ execute:
   freeze: true
 ---
 
-# Learning Outcome
+# Reflections
 
-In this chapter, I learn the basic principles and essential components of ggplot2, while gaining hands-on experience in using them to create statistical graphics based on the Layered Grammar of Graphics. By the end of this chapter, I will be able to apply ggplot2’s key graphical elements to produce statistical charts that are both elegant and functional.
+From this hands-on exercise, I learnt that ggplot2 is more than just a charting tool — it gives me a structured way to think about data visualisation. I now better understand how different components such as aesthetics, geoms, facets, coordinates, and themes work together to build clear and meaningful charts. This exercise also helped me become more familiar with choosing suitable chart types and customising them to communicate data more effectively.
 
 # Getting Started
 
@@ -26,7 +26,7 @@ pacman::p_load(tidyverse)
 
 ## Importing data
 
-Next up, we will import the data 
+Next up, we will import the data
 
 ```{r}
 exam_data <- read_csv("data/Exam_data.csv")
@@ -75,21 +75,19 @@ ggplot2 is an implementation of Leland Wilkinson’s Grammar of Graphics. Figure
 
 Reference: Hadley Wickham (2010) [“A layered grammar of graphics.”](https://vita.had.co.nz/papers/layered-grammar.html) *Journal of Computational and Graphical Statistics*, vol. 19, no. 1, pp. 3–28.
 
-I learned that a ggplot2 visualisation is built from several key components. These include the data being plotted, aesthetic mappings that control how variables are shown visually, geometric objects such as bars or points, facets that split the data into multiple panels, statistical transformations that summarise the data, coordinate systems that determine how the plot is displayed, and themes that control the overall appearance of non-data elements
+A ggplot2 visualisation is built from several key components. These include the data being plotted, aesthetic mappings that control how variables are shown visually, geometric objects such as bars or points, facets that split the data into multiple panels, statistical transformations that summarise the data, coordinate systems that determine how the plot is displayed, and themes that control the overall appearance of non-data elements
 
 # ggplot2: data
 
-I learned that calling ggplot() with a dataset creates a blank plotting canvas and initializes a ggplot object. The data argument specifies which dataset will be used for the visualisation, and if the input is not already in a data frame format, ggplot2 will convert it into one.
-
+Calling ggplot() with a dataset creates a blank plotting canvas and initializes a ggplot object. The data argument specifies which dataset will be used for the visualisation, and if the input is not already in a data frame format, ggplot2 will convert it into one.
 
 ```{r}
 ggplot(data=exam_data)
 ```
 
-
 # ggplot2: Aesthetic mappings
 
-I learned that aesthetic mappings are an essential part of ggplot2 because they define how variables in the dataset are represented visually. By using aes(), I can assign a variable to an axis or another visual property. In this example, mapping MATHS to the x-axis causes ggplot2 to display the x-axis and its corresponding label.
+Aesthetic mappings are an essential part of ggplot2 because they define how variables in the dataset are represented visually. By using aes(), I can assign a variable to an axis or another visual property. In this example, mapping MATHS to the x-axis causes ggplot2 to display the x-axis and its corresponding label.
 
 ```{r}
 ggplot(data=exam_data, 
@@ -130,12 +128,11 @@ ggplot(data=exam_data,
 
 ## geom_dotplot
 
-- geom_dotplot() is used to create a dot plot in ggplot2.
-- Each dot represents one observation in the dataset.
-- The dots are stacked to show the distribution of values.
-- The default y-axis in a dot plot is not very meaningful and can be misleading.
-- Removing the y-axis makes the plot clearer.
-Adjusting the binwidth improves how the dots are grouped and displayed.
+-   geom_dotplot() is used to create a dot plot in ggplot2.
+-   Each dot represents one observation in the dataset.
+-   The dots are stacked to show the distribution of values.
+-   The default y-axis in a dot plot is not very meaningful and can be misleading.
+-   Removing the y-axis makes the plot clearer. Adjusting the binwidth improves how the dots are grouped and displayed.
 
 ```{r}
 ggplot(data=exam_data, 
@@ -156,10 +153,9 @@ ggplot(data=exam_data,
   geom_histogram()
 ```
 
-- Default bin value is 30
+-   Default bin value is 30
 
 ## Learning how to modify a geometric object by changing **`geom()`**
-
 
 -   *bins* argument is used to change the number of bins to 20,
 
@@ -187,14 +183,13 @@ ggplot(data=exam_data,
                  color="grey30")
 ```
 
-
 ## Geometric Objects: geom-density()
 
 [`geom-density()`](https://ggplot2.tidyverse.org/reference/geom_density.html) computes and plots [kernel density estimate](https://en.wikipedia.org/wiki/Kernel_density_estimation), which is a smoothed version of the histogram
 
-- Useful alternative to the histogram for continuous data that comes from an underlying smooth distribution
+-   Useful alternative to the histogram for continuous data that comes from an underlying smooth distribution
 
-- The code below plots the distribution of Maths scores in a kernel density estimate plot.
+-   The code below plots the distribution of Maths scores in a kernel density estimate plot.
 
 ```{r}
 ggplot(data=exam_data, 
@@ -224,10 +219,9 @@ ggplot(data=exam_data,
   geom_boxplot()            
 ```
 
-[**Notches**](https://sites.google.com/site/davidsstatistics/home/notched-box-plots) are used in box plots to help visually assess whether the medians of distributions differ
-- If notches do not overlap - medians are different
+[**Notches**](https://sites.google.com/site/davidsstatistics/home/notched-box-plots) are used in box plots to help visually assess whether the medians of distributions differ - If notches do not overlap - medians are different
 
-- Below plots the distribution of Maths scores by gender in notched plot instead of boxplot.
+-   Below plots the distribution of Maths scores by gender in notched plot instead of boxplot.
 
 ```{r}
 ggplot(data=exam_data, 
@@ -238,11 +232,7 @@ ggplot(data=exam_data,
 
 ## Geometric Objects: geom_violin()
 
-[`geom_violin`](https://ggplot2.tidyverse.org/reference/geom_violin.html) 
-- Used to create violin plots
-- Useful for comparing multiple data distributions
-- Compared with ordinary density curves, violin plots are easier to compare when there are several groups
-- This is because the distributions are displayed side by side instead of overlapping as lines
+[`geom_violin`](https://ggplot2.tidyverse.org/reference/geom_violin.html) - Used to create violin plots - Useful for comparing multiple data distributions - Compared with ordinary density curves, violin plots are easier to compare when there are several groups - This is because the distributions are displayed side by side instead of overlapping as lines
 
 Plot for the distribution of Maths score by gender in violin plot.
 
@@ -255,8 +245,7 @@ ggplot(data=exam_data,
 
 ## Geometric Objects: geom_point()
 
-[`geom_point()`](https://ggplot2.tidyverse.org/reference/geom_point.html) 
-- Useful for creating scatterplot.
+[`geom_point()`](https://ggplot2.tidyverse.org/reference/geom_point.html) - Useful for creating scatterplot.
 
 Plot for scatterplot showing the Maths and English grades of pupils by using `geom_point()`.
 
@@ -269,7 +258,7 @@ ggplot(data=exam_data,
 
 ## geom objects can be combined
 
-- Plot the data points on the boxplots by using both `geom_boxplot()` and `geom_point()`.
+-   Plot the data points on the boxplots by using both `geom_boxplot()` and `geom_point()`.
 
 ```{r}
 ggplot(data=exam_data, 
@@ -282,13 +271,9 @@ ggplot(data=exam_data,
 
 # ggplot2: stat
 
-[Statistics functions](https://ggplot2.tidyverse.org/reference/index.html#stats) 
-- Statistically transform data, usually summary
-- frequency of values of a variable (bar graph)
-    -   a mean
-    -   a confidence limit
+[Statistics functions](https://ggplot2.tidyverse.org/reference/index.html#stats) - Statistically transform data, usually summary - frequency of values of a variable (bar graph) - a mean - a confidence limit
 
-- Two ways to use these functions:
+-   Two ways to use these functions:
     -   add a `stat_()` function and override the default geom, or
     -   add a `geom_()` function and override the default stat
 
@@ -354,14 +339,12 @@ ggplot(data=exam_data,
 
 # ggplot2: Facets
 
-- Facetting generates small multiples (sometimes also called trellis plot), each displaying a different subset of the data
-- Alternative to aesthetics for displaying additional discrete variables. ggplot2 supports two types of facets, namely: [`facet_grid()`](https://ggplot2.tidyverse.org/reference/facet_grid.html) and [`facet_wrap`](https://ggplot2.tidyverse.org/reference/facet_wrap.html).
+-   Facetting generates small multiples (sometimes also called trellis plot), each displaying a different subset of the data
+-   Alternative to aesthetics for displaying additional discrete variables. ggplot2 supports two types of facets, namely: [`facet_grid()`](https://ggplot2.tidyverse.org/reference/facet_grid.html) and [`facet_wrap`](https://ggplot2.tidyverse.org/reference/facet_wrap.html).
 
 ## Working with facet_wrap()
 
-[`facet_wrap`](https://ggplot2.tidyverse.org/reference/facet_wrap.html) 
-- Wraps a 1d sequence of panels into 2d
-- Better use of screen space than facet_grid because most displays are roughly rectangular
+[`facet_wrap`](https://ggplot2.tidyverse.org/reference/facet_wrap.html) - Wraps a 1d sequence of panels into 2d - Better use of screen space than facet_grid because most displays are roughly rectangular
 
 Below shows trellis plot using `facet-wrap()`.
 
@@ -374,9 +357,7 @@ ggplot(data=exam_data,
 
 ## facet_grid() function
 
-[`facet_grid()`](https://ggplot2.tidyverse.org/reference/facet_grid.html) 
-- Forms a matrix of panels defined by row and column facetting variables
-- Most useful when you have two discrete variables, and all combinations of the variables exist in the data
+[`facet_grid()`](https://ggplot2.tidyverse.org/reference/facet_grid.html) - Forms a matrix of panels defined by row and column facetting variables - Most useful when you have two discrete variables, and all combinations of the variables exist in the data
 
 Below plots a trellis plot using `facet_grid()`.
 
@@ -389,8 +370,8 @@ ggplot(data=exam_data,
 
 # ggplot2: Coordinates
 
-- Map the position of objects onto the plane of the plot 
-- Number of different possible coordinate systems to use
+-   Map the position of objects onto the plane of the plot
+-   Number of different possible coordinate systems to use
 
 ```         
 -   [`coord_cartesian()`](https://ggplot2.tidyverse.org/reference/coord_cartesian.html): the default cartesian coordinate systems, where you specify x and y values (e.g. allows you to zoom in or out). 
@@ -443,7 +424,7 @@ ggplot(data=exam_data,
 
 # ggplot2: themes
 
-A list of theme can be found at this [link](https://ggplot2.tidyverse.org/reference/ggtheme.html). 
+A list of theme can be found at this [link](https://ggplot2.tidyverse.org/reference/ggtheme.html).
 
 ## Working with theme
 

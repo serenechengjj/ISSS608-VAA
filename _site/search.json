@@ -4,7 +4,7 @@
     "href": "index.html",
     "title": "ISSS608-VAA",
     "section": "",
-    "text": "Hello, my name is Serene Cheng. Welcome to ISSS608 Visual Analytics and Applications. In this website, you will find my coursework prepared for this course. Credits to Professor Kam Tin Seong for his valuable lessons and the course materials!\nIf you’re interested, you can navigate to the right to find out more about me!"
+    "text": "Welcome to ISSS608 Visual Analytics and Applications. In this website, you will find my coursework prepared for this course. Credits to Professor Kam Tin Seong for his valuable lessons and the course materials!\nIf you’re interested, you can navigate to the top right ‘About’ tab to find out more."
   },
   {
     "objectID": "about.html",
@@ -243,5 +243,12 @@
     "title": "Hands-on Exercise 1",
     "section": "Learning how to modify geometric object by changing aes()",
     "text": "Learning how to modify geometric object by changing aes()\nWe change the interior colour of the histogram (i.e. fill) by using sub-group of aesthetic(). Can use this method to colour, fill and alpha of the geometric.\n\nggplot(data=exam_data, \n       aes(x= MATHS, \n           fill = GENDER)) +\n  geom_histogram(bins=20, \n                 color=\"grey30\")"
+  },
+  {
+    "objectID": "index.html#hello-my-name-is-serene-cheng.",
+    "href": "index.html#hello-my-name-is-serene-cheng.",
+    "title": "ISSS608-VAA",
+    "section": "",
+    "text": "Welcome to ISSS608 Visual Analytics and Applications. In this website, you will find my coursework prepared for this course. Credits to Professor Kam Tin Seong for his valuable lessons and the course materials!\nIf you’re interested, you can navigate to the top right ‘About’ tab to find out more."
   }
 ]
