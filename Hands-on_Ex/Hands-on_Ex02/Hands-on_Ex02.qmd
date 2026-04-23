@@ -423,7 +423,10 @@ To learn more about, refer to [Plot Assembly](https://patchwork.data-imaginist.
 
 ## Creating composite figure with tag
 
-To identify subplots in text, patchwork also provides auto-tagging capabilities as shown in the figure below ::: panel-tabset \## The plot
+To identify subplots in text, patchwork also provides auto-tagging capabilities as shown in the figure below 
+
+::: panel-tabset 
+## The plot
 
 ```{r}
 ((p1 / p2) | p3) + 

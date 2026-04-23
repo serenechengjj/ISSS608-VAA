@@ -250,5 +250,82 @@
     "title": "ISSS608-VAA",
     "section": "",
     "text": "Welcome to ISSS608 Visual Analytics and Applications. In this website, you will find my coursework prepared for this course. Credits to Professor Kam Tin Seong for his valuable lessons and the course materials!\nIf you’re interested, you can navigate to the top right ‘About’ tab to find out more."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html",
+    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html",
+    "title": "Hands-on Exercise 2",
+    "section": "",
+    "text": "From this exercise, I learned that ggplot2 can be extended further with additional packages to make visualisations clearer, more polished, and more effective. I explored how packages such as ggrepel, ggthemes, hrbrthemes, and patchwork can improve the way charts are labelled, styled, and combined into a single figure. Overall, this exercise helped strengthen both my technical understanding of data visualisation and my ability to present charts in a more professional and readable way."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#installing-and-loading-the-required-libraries",
+    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#installing-and-loading-the-required-libraries",
+    "title": "Hands-on Exercise 2",
+    "section": "Installing and loading the required libraries",
+    "text": "Installing and loading the required libraries\nFour R packages will be used on top of tidyverse.\n\nggrepel: an R package provides geoms for ggplot2 to repel overlapping text labels.\nggthemes: an R package provides some extra themes, geoms, and scales for ‘ggplot2’.\nhrbrthemes: an R package provides typography-centric themes and theme components for ggplot2.\npatchwork: an R package for preparing composite figure created using ggplot2.\n\n\npacman::p_load(ggrepel, patchwork, \n               ggthemes, hrbrthemes,\n               tidyverse)"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#importing-data",
+    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#importing-data",
+    "title": "Hands-on Exercise 2",
+    "section": "Importing data",
+    "text": "Importing data\nNext up, we will import the data (looks familiar? Its the same dataset as the one in Hands-on Exercise 1!\n\nexam_data &lt;- read_csv(\"data/Exam_data.csv\")\n\nTotal of seven attributes in the exam_data table data frame. Four of them are categorical data type and the other three are in continuous data type.\n\nThe categorical attributes are: ID, CLASS, GENDER and RACE.\nThe continuous attributes are: MATHS, ENGLISH and SCIENCE."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#working-with-ggtheme-package",
+    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#working-with-ggtheme-package",
+    "title": "Hands-on Exercise 2",
+    "section": "Working with ggtheme package",
+    "text": "Working with ggtheme package\nggthemes provides ‘ggplot2’ themes that replicate the look of plots by Edward Tufte, Stephen Few, Fivethirtyeight, The Economist, ‘Stata’, ‘Excel’, and The Wall Street Journal, among others. In the example below, The Economist theme is used.\n\nThe plotThe code\n\n\n\nggplot(data=exam_data, \n             aes(x = MATHS)) +\n  geom_histogram(bins=20, \n                 boundary = 100,\n                 color=\"grey25\", \n                 fill=\"grey90\") +\n  ggtitle(\"Distribution of Maths scores\") +\n  theme_economist()\n\n\n\n\n\n\n\n\n\n\n\nggplot(data=exam_data, \n             aes(x = MATHS)) +\n  geom_histogram(bins=20, \n                 boundary = 100,\n                 color=\"grey25\", \n                 fill=\"grey90\") +\n  ggtitle(\"Distribution of Maths scores\") +\n  theme_economist()\n\n\n\n\n\n\n\n\n\n\n\nClick this vignette to learn more."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#working-with-hrbthems-package",
+    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#working-with-hrbthems-package",
+    "title": "Hands-on Exercise 2",
+    "section": "Working with hrbthems package",
+    "text": "Working with hrbthems package\nhrbrthemes package provides a base theme that focuses on typographic elements, including where various labels are placed as well as the fonts that are used.\n\nThe plotThe code\n\n\n\nggplot(data=exam_data, \n             aes(x = MATHS)) +\n  geom_histogram(bins=20, \n                 boundary = 100,\n                 color=\"grey25\", \n                 fill=\"grey90\") +\n  ggtitle(\"Distribution of Maths scores\") +\n  hrbrthemes::theme_ipsum(base_family = \"sans\")\n\n\n\n\n\n\n\n\n\n\n\nggplot(data=exam_data, \n             aes(x = MATHS)) +\n  geom_histogram(bins=20, \n                 boundary = 100,\n                 color=\"grey25\", \n                 fill=\"grey90\") +\n  ggtitle(\"Distribution of Maths scores\") +\n  hrbrthemes::theme_ipsum(base_family = \"sans\")\n\n\n\n\n\n\n\n\n\n\n\nBelow centers around productivity for a production workflow. This “production workflow” is the context for where the elements of hrbrthemes should be used. Click this vignette to learn more.\n\nThe plotThe code\n\n\n\nggplot(data=exam_data, \n             aes(x = MATHS)) +\n  geom_histogram(bins=20, \n                 boundary = 100,\n                 color=\"grey25\", \n                 fill=\"grey90\") +\n  ggtitle(\"Distribution of Maths scores\") +\n  theme_ipsum(\n    base_family = \"sans\",\n    axis_title_size = 18,\n    base_size = 15,\n    grid = \"Y\"\n  )\n\n\n\n\n\n\n\n\n\n\n\nggplot(data=exam_data, \n             aes(x = MATHS)) +\n  geom_histogram(bins=20, \n                 boundary = 100,\n                 color=\"grey25\", \n                 fill=\"grey90\") +\n  ggtitle(\"Distribution of Maths scores\") +\n  theme_ipsum(\n    base_family = \"sans\",\n    axis_title_size = 18,\n    base_size = 15,\n    grid = \"Y\")\n\n\n\n\n\n\n\n\n\n\n\nWhat can we learn from the code chunk above?\n\naxis_title_size argument is used to increase the font size of the axis title to 18,\nbase_size argument is used to increase the default axis label to 15, and\ngrid argument is used to remove the x-axis grid lines."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#creating-composite-graphics-pathwork-methods",
+    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#creating-composite-graphics-pathwork-methods",
+    "title": "Hands-on Exercise 2",
+    "section": "Creating Composite Graphics: pathwork methods",
+    "text": "Creating Composite Graphics: pathwork methods\nThis section discusses several ggplot2 extension packages that can be used to combine multiple graphs into one composite figure, including grid.arrange()  from gridExtra and plot_grid()from cowplot . The main focus is on  patchwork, which is a ggplot2 extension package designed to make plot combination easier and more flexible.\nOne key advantage of patchwork is its simple syntax, which allows different plot layouts to be created easily. For instance, the plus sign (+) is used for a two-column layout, parentheses () are used to group plots together, and the division sign (/) is used to arrange plots in two rows."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#combining-2-ggplot2-graphs",
+    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#combining-2-ggplot2-graphs",
+    "title": "Hands-on Exercise 2",
+    "section": "Combining 2 ggplot2 graphs",
+    "text": "Combining 2 ggplot2 graphs\nFigure in the tabset below shows a composite of two histograms created using patchwork. Note how simple the syntax used to create the plot!\n\nThe plotThe code\n\n\n\np1 + p2\n\n\n\n\n\n\n\n\n\n\n\np1 + p2"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#combining-3-ggplot2-graphs",
+    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#combining-3-ggplot2-graphs",
+    "title": "Hands-on Exercise 2",
+    "section": "Combining 3 ggplot2 graphs",
+    "text": "Combining 3 ggplot2 graphs\n\nThe plotThe code\n\n\n\n(p1 / p2) | p3\n\n\n\n\n\n\n\n\n\n\n\n(p1 / p2) | p3\n\n\n\n\n\n\n\n\n\n\n\n\n“/” operator to stack two ggplot2 graphs,\n“|” operator to place the plots beside each other,\n“()” operator the define the sequence of the plotting.\n\nTo learn more about, refer to Plot Assembly."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#creating-composite-figure-with-tag",
+    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#creating-composite-figure-with-tag",
+    "title": "Hands-on Exercise 2",
+    "section": "Creating composite figure with tag",
+    "text": "Creating composite figure with tag\nTo identify subplots in text, patchwork also provides auto-tagging capabilities as shown in the figure below\n\nThe plotThe code\n\n\n\n((p1 / p2) | p3) + \n  plot_annotation(tag_levels = 'I')\n\n\n\n\n\n\n\n\n\n\n\n((p1 / p2) | p3) + \n  plot_annotation(tag_levels = 'I')"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#creating-figure-with-insert",
+    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#creating-figure-with-insert",
+    "title": "Hands-on Exercise 2",
+    "section": "Creating figure with insert",
+    "text": "Creating figure with insert\nWith insert_element() of patchwork, we can place one or several plots or graphic elements freely on top or below another plot.\n\nThe plotThe code\n\n\n\np3 + inset_element(p2, \n                   left = 0.02, \n                   bottom = 0.7, \n                   right = 0.5, \n                   top = 1)\n\n\n\n\n\n\n\n\n\n\n\np3 + inset_element(p2, \n                   left = 0.02, \n                   bottom = 0.7, \n                   right = 0.5, \n                   top = 1)"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#creating-a-composite-figure-by-using-patchwork-and-ggtheme",
+    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#creating-a-composite-figure-by-using-patchwork-and-ggtheme",
+    "title": "Hands-on Exercise 2",
+    "section": "Creating a composite figure by using patchwork and ggtheme",
+    "text": "Creating a composite figure by using patchwork and ggtheme\nFigure below is created by combining patchwork and theme_economist() of ggthemes package discussed earlier.\n\nThe plotThe code\n\n\n\npatchwork &lt;- (p1 / p2) | p3\npatchwork & theme_economist()\n\n\n\n\n\n\n\n\n\n\n\np3 + inset_element(p2, \n                   left = 0.02, \n                   bottom = 0.7, \n                   right = 0.5, \n                   top = 1)"
   }
 ]
