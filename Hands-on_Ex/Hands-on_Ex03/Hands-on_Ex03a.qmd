@@ -686,10 +686,6 @@ subplot(ggplotly(p1),
 DT::datatable(exam_data, class= "compact")
 ```
 
-```{r}
-DT::datatable(exam_data, class= "compact")
-```
-
 ## Linked brushing: crosstalk method
 
 ::: panel-tabset
