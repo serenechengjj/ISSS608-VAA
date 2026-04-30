@@ -12,7 +12,7 @@ execute:
 
 # Reflections
 
-From this hands-on exercise, I learnt that ggplot2 is more than just a charting tool — it gives me a structured way to think about data visualisation. I now better understand how different components such as aesthetics, geoms, facets, coordinates, and themes work together to build clear and meaningful charts. This exercise also helped me become more familiar with choosing suitable chart types and customising them to communicate data more effectively.
+From this hands-on exercise, I learnt that ggplot2 is more than just a charting tool — it gives me a structured way to think about data visualisation. I now better understand how different components such as aesthetics, geoms, facets, coordinates, and themes work together to build clear and meaningful charts. This exercise also helped me to be more familiar with choosing suitable chart types and customising them to communicate data more effectively.
 
 # Getting Started
 

@@ -2,4 +2,4 @@
 title: "About"
 ---
 
-A picture tells a thousand word - this is all about me in an image! ![](images/ChatGPT Image Apr 22, 2026, 05_46_51 PM.png)
+A picture tells a thousand word - this is all about me in an image! ![](images/ChatGPT%20Image%20Apr%2022,%202026,%2005_46_51%20PM.png)
