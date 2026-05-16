@@ -151,17 +151,24 @@ ggplot.component = list(
 
 `ggcorrmat()` = one overall correlation chart `grouped_ggcorrmat()` = separate correlation charts for each group/category, like red wine vs white wine.
 
+
 ```{r}
+#| fig-width: 12
+#| fig-height: 14
+#| fig-align: center
+
 grouped_ggcorrmat(
   data = wine,
   cor.vars = 1:11,
   grouping.var = type,
   type = "robust",
   p.adjust.method = "holm",
-  plotgrid.args = list(ncol = 2),
-  ggcorrplot.args = list(outline.color = "black", 
-                         hc.order = TRUE,
-                         tl.cex = 10),
+  plotgrid.args = list(ncol = 1),
+  ggcorrplot.args = list(
+    outline.color = "black", 
+    hc.order = TRUE,
+    tl.cex = 12
+  ),
   annotation.args = list(
     tag_levels = "a",
     title = "Correlogram for wine dataset",
@@ -170,6 +177,7 @@ grouped_ggcorrmat(
   )
 )
 ```
+
 
 -   to build a facet plot, the only argument needed is `grouping.var`.
 
