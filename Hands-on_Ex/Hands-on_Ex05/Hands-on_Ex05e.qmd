@@ -316,11 +316,13 @@ ggplot(data=realis2018_selected,
 First time installing a package from github, so we should install *devtools* package by using the code below or else can skip this step.
 
 
-install.packages("devtools")
+```{r}
+# install.packages("devtools")
+```
 
 ```{r}
-library(devtools)
-install_github("timelyportfolio/d3treeR")
+# library(devtools)
+# install_github("timelyportfolio/d3treeR")
 ```
 
 Above code load the devtools library and install the package found in github.

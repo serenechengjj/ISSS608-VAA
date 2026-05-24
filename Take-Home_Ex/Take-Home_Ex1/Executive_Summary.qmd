@@ -1,0 +1,923 @@
+---
+title: "Executive Summary"
+subtitle: "Motor Insurance Portfolio Profitability and Volatility"
+author: "Serene Cheng"
+date: "May 2026"
+format:
+  revealjs:
+    theme: simple
+    slide-number: true
+    chalkboard: true
+    preview-links: true
+    width: 1280
+    height: 720
+    margin: 0.06
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{r setup}
+pacman::p_load(tidyverse, ggdist, ggridges, patchwork, scales, corrplot, rstatix, gganimate, gifski)
+
+motor_insurance <- read_delim(
+  "data/Dataset of motor insurance portfolio.csv",
+  delim = ";",
+  show_col_types = FALSE
+)
+
+motor_insurance_selected <- motor_insurance %>%
+  select(
+    year, policy_status, policy_type, business_type, bonus_score,
+    driver_age, vehicle_age, age_driving_licence, fuel_type,
+    vehicle_value, vehicle_brand, circulation_area, municipality_type,
+    total_premium, total_claims, total_incurred, total_exposure
+  )
+
+motor_insurance_final <- motor_insurance_selected %>%
+  drop_na() %>%
+  mutate(
+    driving_experience = driver_age - age_driving_licence,
+    loss_ratio = total_incurred / total_premium,
+    claim_frequency = total_claims / total_exposure,
+    claim_severity = if_else(total_claims > 0, total_incurred / total_claims, NA_real_),
+    underwriting_profit = total_premium - total_incurred,
+    policy_status = recode(as.factor(policy_status), "A" = "Active", "C" = "Cancelled"),
+    business_type = recode(as.factor(business_type), "NB" = "New Business", "P" = "Portfolio"),
+    bonus_score = recode(as.factor(bonus_score), "G" = "Good", "N" = "Neutral", "B" = "Bad"),
+    fuel_type = recode(as.factor(fuel_type), "D" = "Diesel", "G" = "Gasoline"),
+    circulation_area = recode(as.factor(circulation_area), "U" = "Urban", "R" = "Rural"),
+    municipality_type = recode(as.factor(municipality_type), "I" = "Inland", "C" = "Coastal", "IS" = "Islands"),
+    policy_type = as.factor(policy_type),
+    vehicle_brand = as.factor(vehicle_brand),
+    loss_ratio_group = case_when(
+      loss_ratio == 0 ~ "No Loss",
+      loss_ratio > 0 & loss_ratio <= 1 ~ "Profitable / Acceptable",
+      loss_ratio > 1 ~ "Loss-making",
+      TRUE ~ NA_character_
+    ),
+    claim_frequency_group = case_when(
+      claim_frequency == 0 ~ "No Claim",
+      claim_frequency > 0 & claim_frequency <= 1 ~ "Low Claim Frequency",
+      claim_frequency > 1 ~ "High Claim Frequency",
+      TRUE ~ NA_character_
+    )
+  ) %>%
+  select(-age_driving_licence)
+```
+
+## Motor Insurance Portfolio Profitability and Volatility {.smaller}
+
+### Executive Summary
+
+<div style="font-size: 0.75em;">
+
+**Serene Cheng**  
+ISSS608 Visual Analytics and Applications  
+May 2026
+
+</div>
+
+::: {.notes}
+This presentation summarises the key findings from my take-home exercise on a Spanish motor insurance portfolio. The focus is on understanding portfolio profitability and volatility using visual analytics and statistical validation. Instead of presenting every chart from the technical report, this executive summary highlights the main business patterns that matter for decision-making: portfolio composition, profitability movement, risk segments, claim frequency and claim severity.
+:::
+
+## Contents {.smaller}
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+1. Business context and objective  
+2. Data and analytical approach  
+3. Portfolio composition  
+4. Policyholder and vehicle profile  
+5. Profitability overview  
+6. Policy type and loss ratio  
+
+:::
+
+::: {.column width="50%"}
+
+7. Profitability trend over time  
+8. Business type and underwriting profit  
+9. Bonus score pattern  
+10. Claim frequency  
+11. Claim severity  
+12. Recommendations and conclusion  
+
+:::
+
+::::
+
+::: {.notes}
+I will first introduce the business context and data approach, then highlight the main visual findings. The middle slides focus on profitability because this is the key business outcome. The later slides cover claim frequency and claim severity, which help explain portfolio volatility. I end with recommendations that the insurer can consider for pricing, underwriting and further investigation.
+:::
+
+## 1. Business Context and Objective {.smaller}
+
+Insurers need to understand **which portfolio segments drive poor profitability and claim volatility**.
+
+This study aims to:
+
+- Explore policy, driver, vehicle and geographic characteristics
+- Analyse profitability using **loss ratio** and **underwriting profit**
+- Analyse volatility using **claim frequency** and **claim severity**
+- Validate key visual patterns using statistical tests
+
+::: {.notes}
+The business problem is that poor profitability in an insurance portfolio may not be caused by one obvious factor. It can be influenced by policy coverage, customer profile, vehicle characteristics, claim behaviour and changes over time. Therefore, the objective is not just to describe the dataset, but to identify which segments appear linked to weaker profitability or higher volatility. Loss ratio is used as the main profitability indicator, while claim frequency and claim severity are used to understand claim behaviour.
+:::
+
+## 2. Data and Analytical Approach {.smaller}
+
+Dataset used:
+
+- Spanish motor insurance portfolio
+- **354,140 raw records**
+- 1,802 rows removed due to missing values
+- Final analysis focused on selected policy, vehicle, claim and premium variables
+
+Derived measures:
+
+- `loss_ratio = total_incurred / total_premium`
+- `underwriting_profit = total_premium - total_incurred`
+- `claim_frequency = total_claims / total_exposure`
+- `claim_severity = total_incurred / total_claims`
+
+::: {.notes}
+The raw dataset contains more than 354,000 policy-year records. After removing missing values, only around 0.51% of records were dropped, so the data loss is small. I derived several insurance measures to support the analysis. Loss ratio shows how much of premium is used to cover claims. Underwriting profit gives a simplified profitability view before expenses and other adjustments. Claim frequency measures how often claims occur after adjusting for exposure, while claim severity measures the average claim amount when claims occur.
+:::
+
+## 3. Portfolio Composition: Policy Type {.smaller}
+
+```{r}
+#| echo: false
+#| fig-width: 8
+#| fig-height: 4.2
+#| out-width: "82%"
+
+# Main count table
+policy_type_summary <- motor_insurance_final %>%
+  count(policy_type) %>%
+  mutate(
+    percentage = n / sum(n) * 100,
+    label = paste0(scales::comma(n), "\n(", round(percentage, 1), "%)")
+  )
+
+# Reorder factor levels for plotting
+policy_type_summary <- policy_type_summary %>%
+  mutate(
+    policy_type = factor(
+      policy_type,
+      levels = c("TP", "COMP_N", "TPG", "COMP_E", "CC")
+    )
+  )
+
+# Description table for annotation on the right
+policy_desc <- tibble(
+  policy_type = factor(
+    c("CC", "COMP_E", "TPG", "COMP_N", "TP"),
+    levels = levels(policy_type_summary$policy_type)
+  ),
+  desc = c(
+    "CC: Third-party liability with two or more additional coverages",
+    "COMP_E: Comprehensive with excess",
+    "TPG: Third-party liability with glass coverage",
+    "COMP_N: Comprehensive without excess",
+    "TP: Basic third-party liability only"
+  ),
+  xpos = c(260000, 260000, 260000, 260000, 260000)
+)
+
+ggplot(policy_type_summary, aes(x = policy_type, y = n, fill = policy_type)) +
+  geom_col(colour = "white") +
+  geom_text(
+    aes(label = label),
+    hjust = -0.1,
+    size = 2.8
+  ) +
+  geom_text(
+    data = policy_desc,
+    aes(x = policy_type, y = xpos, label = desc),
+    inherit.aes = FALSE,
+    hjust = 0,
+    size = 2.6,
+    colour = "black"
+  ) +
+  coord_flip(clip = "off") +
+  scale_y_continuous(
+    labels = scales::comma,
+    expand = expansion(mult = c(0, 0.55))
+  ) +
+  scale_fill_brewer(palette = "Set2") +
+  labs(
+    title = "Distribution of Policy Type",
+   subtitle = "Shows the coverage mix of the insurance portfolio", 
+    x = "Policy Type",
+    y = "Number of Policies"
+  ) +
+  theme_minimal() +
+  theme(
+    legend.position = "none",
+    plot.margin = margin(t = 5, r = 120, b = 5, l = 5)
+  )
+```
+
+**Key insight:**
+
+- CC policies dominate the portfolio at **204,317 policies (58.0%)**
+- COMP_E is second largest at **90,320 policies (25.6%)**
+- TP and COMP_N form smaller shares
+
+::: {.notes}
+This chart shows that the portfolio is highly concentrated in CC policies, which make up 58% of the portfolio. This means the insurer’s exposure is mainly in broader coverage products rather than basic third-party-only policies. This is important because policy mix can affect both premium level and claim cost. Even if some policy types are smaller in count, they may still be important if they have weaker profitability or higher loss-making shares.
+:::
+
+## 4. Policyholder and Vehicle Profile {.smaller}
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+```{r}
+#| echo: false
+#| fig-width: 5
+#| fig-height: 3.5
+#| out-width: "100%"
+
+ggplot(motor_insurance_final, aes(x = driver_age)) +
+  geom_histogram(bins = 20, fill = "steelblue", colour = "white") +
+  geom_vline(xintercept = median(motor_insurance_final$driver_age, na.rm = TRUE),
+             linetype = "dashed", colour = "blue") +
+  labs(
+    title = "Driver Age Distribution",
+    x = "Driver Age",
+    y = "Number of Policies"
+  ) +
+  coord_cartesian(xlim = c(20, 85)) +
+  theme_minimal()
+```
+
+:::
+
+::: {.column width="50%"}
+
+```{r}
+#| echo: false
+#| fig-width: 5
+#| fig-height: 3.5
+#| out-width: "100%"
+
+ggplot(motor_insurance_final, aes(x = vehicle_value)) +
+  geom_histogram(bins = 50, fill = "coral", colour = "white") +
+  geom_vline(xintercept = median(motor_insurance_final$vehicle_value, na.rm = TRUE),
+             linetype = "dashed", colour = "blue") +
+  labs(
+    title = "Vehicle Value Distribution",
+    x = "Vehicle Value",
+    y = "Number of Policies"
+  ) +
+  coord_cartesian(xlim = c(0, 100000)) +
+  scale_x_continuous(labels = scales::comma) +
+  scale_y_continuous(labels = scales::comma) +
+  theme_minimal()
+```
+
+:::
+
+::::
+
+**Key insight:**
+
+- Drivers are mostly concentrated between **35 and 65 years old**
+- Vehicle value is right-skewed, with median **24,687** and mean **26,937**
+- High-value vehicles may contribute to higher claim severity even if they form a smaller group
+
+::: {.notes}
+The portfolio mainly consists of middle-aged drivers, with fewer very young or very old drivers. Vehicle value is right-skewed, meaning most vehicles are lower to mid-value, while a smaller number of high-value vehicles pull the mean upward. This matters because high-value vehicles may not dominate the portfolio by count, but they could still contribute to larger claim amounts if accidents occur. However, later correlation results suggest that continuous variables such as age and vehicle value are not strong standalone predictors.
+:::
+
+## 5. Profitability Overview: Loss Ratio Groups {.smaller}
+
+```{r}
+#| echo: false
+#| fig-width: 7
+#| fig-height: 4
+#| out-width: "85%"
+
+motor_insurance_final %>%
+  filter(!is.na(loss_ratio_group)) %>%
+  count(loss_ratio_group) %>%
+  mutate(
+    percentage = n / sum(n) * 100,
+    loss_ratio_group = factor(
+      loss_ratio_group,
+      levels = c("No Loss", "Profitable / Acceptable", "Loss-making")
+    ),
+    label = paste0(scales::comma(n), "\n(", round(percentage, 1), "%)")
+  ) %>%
+  ggplot(aes(x = loss_ratio_group, y = n)) +
+  geom_col(fill = "mediumpurple", colour = "white") +
+  geom_text(
+    aes(label = label),
+    vjust = -0.4,
+    size = 3.2
+  ) +
+  scale_y_continuous(
+    labels = scales::comma,
+    expand = expansion(mult = c(0, 0.25))
+  ) +
+  coord_cartesian(clip = "off") +
+  labs(
+    title = "Distribution of Loss Ratio Groups",
+    subtitle = "Most policies have no incurred claims, but loss-making policies remain important",
+    x = "Loss Ratio Group",
+    y = "Number of Policies"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 13),
+    plot.subtitle = element_text(size = 10),
+    axis.title = element_text(size = 10),
+    axis.text = element_text(size = 9),
+    plot.margin = margin(t = 20, r = 10, b = 10, l = 10)
+  )
+```
+
+**Key insight:**
+
+- Most policies fall under **No Loss**
+- Smaller group is **Profitable / Acceptable**
+- Loss-making group is smaller but important
+
+::: {.notes}
+The loss ratio distribution is zero-heavy because many insurance policies do not record claims within the exposure period. This is expected in insurance portfolios. However, the smaller loss-making group is still important because these policies have incurred claims greater than premiums collected. From a management perspective, the key issue is not just how many policies are loss-making, but whether specific segments have a higher concentration of these policies.
+:::
+
+## 6. Policy Type and Loss Ratio Group {.smaller}
+
+```{r}
+#| echo: false
+#| fig-width: 8
+#| fig-height: 4.2
+#| out-width: "90%"
+
+profitability_policy <- motor_insurance_final %>%
+  filter(!is.na(loss_ratio_group), !is.na(policy_type)) %>%
+  count(policy_type, loss_ratio_group) %>%
+  group_by(policy_type) %>%
+  mutate(
+    percentage = n / sum(n) * 100,
+    label = ifelse(percentage >= 3, paste0(round(percentage, 1), "%"), "")
+  ) %>%
+  ungroup() %>%
+  mutate(
+    policy_type = factor(policy_type, levels = c("CC", "COMP_E", "COMP_N", "TP", "TPG")),
+    loss_ratio_group = factor(
+      loss_ratio_group,
+      levels = c("No Loss", "Profitable / Acceptable", "Loss-making")
+    )
+  )
+
+ggplot(
+  profitability_policy,
+  aes(x = policy_type, y = percentage, fill = loss_ratio_group)
+) +
+  geom_col(colour = "white", width = 0.8) +
+  geom_text(
+    aes(label = label),
+    position = position_stack(vjust = 0.5),
+    size = 3
+  ) +
+  scale_y_continuous(
+    labels = function(x) paste0(x, "%")
+  ) +
+  scale_fill_brewer(palette = "Set2") +
+  labs(
+    title = "Loss Ratio Group by Policy Type",
+    subtitle = "Profitability composition differs across policy types",
+    x = "Policy Type",
+    y = "Percentage of Policies",
+    fill = "Loss Ratio Group"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 13),
+    plot.subtitle = element_text(size = 10),
+    axis.title = element_text(size = 10),
+    axis.text = element_text(size = 9),
+    legend.title = element_text(size = 9),
+    legend.text = element_text(size = 8),
+    legend.position = "right"
+  )
+```
+
+**Key insight:**
+
+- COMP_N has the highest loss-making share at **20.8%**
+- TP and TPG perform better, with **94.7%** and **91.2%** no-loss policies
+- Chi-square test confirms significant association:  
+  **χ² = 7921.4, p < 0.001**
+
+::: {.notes}
+This is one of the strongest business findings. Policy type is significantly associated with loss ratio group. COMP_N has the highest loss-making share, suggesting that this policy type may need closer pricing or underwriting review. In contrast, TP and TPG show very high no-loss shares, which suggests stronger profitability performance. The Chi-square test supports that the difference across policy types is statistically significant and not just a visual pattern.
+:::
+
+## 7. Profitability Trend Over Time {.smaller}
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-width: 7.5
+#| fig-height: 4
+#| out-width: "85%"
+
+yearly_loss_ratio <- motor_insurance_final %>%
+  filter(is.finite(loss_ratio)) %>%
+  mutate(year_num = as.numeric(as.character(year))) %>%
+  group_by(year_num) %>%
+  summarise(
+    avg_loss_ratio = mean(loss_ratio, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+ggplot(
+  yearly_loss_ratio,
+  aes(x = year_num, y = avg_loss_ratio)
+) +
+  geom_hline(
+    yintercept = 1,
+    linetype = "dashed",
+    colour = "red",
+    linewidth = 0.8
+  ) +
+  geom_line(
+    colour = "mediumpurple",
+    linewidth = 1.2
+  ) +
+  geom_point(
+    colour = "mediumpurple",
+    size = 3
+  ) +
+  geom_text(
+    aes(label = round(avg_loss_ratio, 2)),
+    vjust = -0.8,
+    size = 3.5,
+    colour = "mediumpurple4"
+  ) +
+  annotate(
+    "text",
+    x = max(yearly_loss_ratio$year_num),
+    y = 1.02,
+    label = "Break-even",
+    colour = "red",
+    hjust = 1,
+    size = 3.5
+  ) +
+  scale_x_continuous(
+    breaks = yearly_loss_ratio$year_num
+  ) +
+  scale_y_continuous(
+    limits = c(0.6, 1.05),
+    labels = scales::label_number(accuracy = 0.01)
+  ) +
+  labs(
+    title = "Temporal Trend of Average Loss Ratio",
+    subtitle = "Average loss ratio increased over time but remains below break-even",
+    x = "Year",
+    y = "Average Loss Ratio"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 13),
+    plot.subtitle = element_text(size = 10),
+    axis.title = element_text(size = 10),
+    axis.text = element_text(size = 9)
+  )
+```
+
+**Key insight:**
+
+- Average loss ratio increased from **0.67 in 2022**
+- To **0.73 in 2023**
+- To **0.87 in 2024**
+- Still below break-even point of 1.00, but moving closer
+
+::: {.notes}
+The portfolio is still profitable on average because the loss ratio remains below 1.00. However, the upward trend is a warning sign. Average loss ratio increased from 0.67 in 2022 to 0.87 in 2024, meaning a larger share of premium is being used to cover incurred claims. Pairwise Wilcoxon tests show that loss ratio differs significantly across all year pairs, with adjusted p-values below 0.001. This suggests that profitability has weakened meaningfully over time.
+:::
+
+## 8. Business Type and Underwriting Profit {.smaller}
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-width: 7.5
+#| fig-height: 4.2
+#| out-width: "85%"
+
+underwriting_business_data <- motor_insurance_final %>%
+  filter(
+    !is.na(business_type),
+    is.finite(underwriting_profit),
+    underwriting_profit >= -1000,
+    underwriting_profit <= 1500
+  ) %>%
+  mutate(
+    business_type = case_when(
+      business_type == "NB" ~ "New Business",
+      business_type == "P" ~ "Portfolio",
+      business_type == "New Business" ~ "New Business",
+      business_type == "Portfolio" ~ "Portfolio",
+      TRUE ~ as.character(business_type)
+    ),
+    business_type = factor(
+      business_type,
+      levels = c("New Business", "Portfolio")
+    )
+  )
+
+ggplot(
+  underwriting_business_data,
+  aes(x = business_type, y = underwriting_profit, fill = business_type)
+) +
+  geom_violin(
+    trim = FALSE,
+    alpha = 0.75,
+    colour = "grey40"
+  ) +
+  geom_boxplot(
+    width = 0.12,
+    fill = "white",
+    colour = "grey30",
+    outlier.shape = NA
+  ) +
+  geom_hline(
+    yintercept = 0,
+    linetype = "dashed",
+    colour = "red",
+    linewidth = 0.8
+  ) +
+  annotate(
+    "text",
+    x = 1.5,
+    y = 120,
+    label = "Break-even",
+    colour = "red",
+    size = 3.2
+  ) +
+  scale_y_continuous(labels = scales::comma) +
+  scale_fill_manual(
+    values = c(
+      "New Business" = "#4D96FF",
+      "Portfolio" = "#FF6B6B"
+    )
+  ) +
+  labs(
+    title = "Underwriting Profit by Business Type",
+    subtitle = "Portfolio policies show stronger underwriting profit than new business",
+    x = "Business Type",
+    y = "Underwriting Profit"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 13),
+    plot.subtitle = element_text(size = 10),
+    axis.title = element_text(size = 10),
+    axis.text = element_text(size = 9),
+    legend.position = "none"
+  )
+```
+
+**Key insight:**
+
+- Portfolio policies show higher underwriting profit than New Business policies
+- Wilcoxon test confirms significant difference: **p < 0.001**
+- Existing policies may be more profitable than newly acquired policies
+
+::: {.notes}
+This slide compares underwriting profit between new business and existing portfolio policies. The finding suggests that portfolio policies perform better than new business policies. This may happen because existing policies have more stable risk profiles, better pricing history or improved renewal selection. The Wilcoxon test confirms that the difference is statistically significant. For the insurer, this means acquisition growth should be monitored carefully to ensure that new business is not weakening overall profitability.
+:::
+
+## 9. Bonus Score and Underwriting Profit {.smaller}
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-width: 7.5
+#| fig-height: 4.2
+#| out-width: "88%"
+
+underwriting_bonus_data <- motor_insurance_final %>%
+  filter(
+    !is.na(bonus_score),
+    is.finite(underwriting_profit),
+    underwriting_profit >= -1000,
+    underwriting_profit <= 1500
+  ) %>%
+  mutate(
+    bonus_score = factor(
+      bonus_score,
+      levels = c("Good", "Neutral", "Bad")
+    )
+  )
+
+median_bonus <- underwriting_bonus_data %>%
+  group_by(bonus_score) %>%
+  summarise(
+    median_profit = median(underwriting_profit, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+ggplot(
+  underwriting_bonus_data,
+  aes(x = underwriting_profit, y = bonus_score, fill = bonus_score)
+) +
+  ggdist::stat_halfeye(
+    adjust = 0.7,
+    width = 0.6,
+    justification = -0.2,
+    alpha = 0.85,
+    colour = "grey40"
+  ) +
+  geom_boxplot(
+    width = 0.12,
+    outlier.shape = NA,
+    fill = "white",
+    colour = "grey30"
+  ) +
+  geom_vline(
+    xintercept = 0,
+    linetype = "dashed",
+    colour = "red",
+    linewidth = 0.8
+  ) +
+  geom_text(
+    data = median_bonus,
+    aes(
+      x = median_profit,
+      y = bonus_score,
+      label = paste0("Median = ", scales::comma(round(median_profit, 0)))
+    ),
+    inherit.aes = FALSE,
+    nudge_y = 0.28,
+    colour = "black",
+    size = 3,
+    hjust = 0
+  ) +
+  annotate(
+    "text",
+    x = 80,
+    y = 3.35,
+    label = "Break-even",
+    colour = "red",
+    size = 3.2
+  ) +
+  scale_x_continuous(labels = scales::comma) +
+  scale_fill_manual(
+    values = c(
+      "Good" = "#FF6B6B",
+      "Neutral" = "#4D96FF",
+      "Bad" = "#6BCB3D"
+    )
+  ) +
+  labs(
+    title = "Underwriting Profit by Bonus Score",
+    subtitle = "Bad group shows higher median profit, but group size is small",
+    x = "Underwriting Profit",
+    y = "Bonus Score"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 13),
+    plot.subtitle = element_text(size = 10),
+    axis.title = element_text(size = 10),
+    axis.text = element_text(size = 9),
+    legend.position = "none"
+  )
+```
+
+**Key insight:**
+
+- Good bonus score dominates the portfolio at **96.5%**
+- Underwriting profit differs significantly across bonus score groups
+- Kruskal-Wallis result: **H(2) = 977.21, p < 0.001**
+- Bad group shows highest median profit, but group size is small
+
+::: {.notes}
+This finding is interesting because it is counterintuitive. We might expect better bonus scores to always show higher profitability, but the Bad group shows the highest median underwriting profit. However, this should not be over-interpreted because the Bad group is very small compared with the Good group. The result may be affected by pricing, coverage mix or small-group effects. The statistical test shows that the groups differ significantly, but further investigation is needed before making business decisions.
+:::
+
+## 10. Claim Frequency {.smaller}
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-width: 7
+#| fig-height: 4
+#| out-width: "85%"
+
+motor_insurance_final %>%
+  filter(!is.na(claim_frequency_group)) %>%
+  count(claim_frequency_group) %>%
+  mutate(
+    percentage = n / sum(n) * 100,
+    claim_frequency_group = factor(
+      claim_frequency_group,
+      levels = c("No Claim", "Low Claim Frequency", "High Claim Frequency")
+    ),
+    label = paste0(scales::comma(n), "\n(", round(percentage, 1), "%)")
+  ) %>%
+  ggplot(aes(x = claim_frequency_group, y = n)) +
+  geom_col(fill = "darkorange", colour = "white") +
+  geom_text(
+    aes(label = label),
+    vjust = -0.4,
+    size = 3.2
+  ) +
+  scale_y_continuous(
+    labels = scales::comma,
+    expand = expansion(mult = c(0, 0.25))
+  ) +
+  coord_cartesian(clip = "off") +
+  labs(
+    title = "Distribution of Claim Frequency Groups",
+    subtitle = "Most policies have no claims, but high-frequency policies still affect volatility",
+    x = "Claim Frequency Group",
+    y = "Number of Policies"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 13),
+    plot.subtitle = element_text(size = 10),
+    axis.title = element_text(size = 10),
+    axis.text = element_text(size = 9),
+    plot.margin = margin(t = 20, r = 10, b = 10, l = 10)
+  )
+```
+
+**Key insight:**
+
+- **301,814 policies (85.7%)** have no claims
+- **17,911 policies (5.1%)** have low claim frequency
+- **32,565 policies (9.2%)** have high claim frequency
+
+::: {.notes}
+Claim frequency is also zero-heavy, which is normal for motor insurance because most policyholders do not make claims in a given period. The majority of policies fall under the no-claim group. However, the high claim frequency group still matters because repeated claims can create volatility and may signal riskier behaviour or exposure. This slide helps separate claim occurrence from claim size, which is important because profitability pressure can come from either frequent claims or severe claims.
+:::
+
+## 11. Claim Severity {.smaller}
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-width: 7.5
+#| fig-height: 4.3
+#| out-width: "88%"
+
+# Filter to policies with claims only
+claim_severity_data <- motor_insurance_final %>%
+  filter(total_claims > 0, is.finite(claim_severity))
+
+# Summary statistics
+mean_claim_severity <- round(mean(claim_severity_data$claim_severity, na.rm = TRUE), 0)
+median_claim_severity <- round(median(claim_severity_data$claim_severity, na.rm = TRUE), 0)
+sd_claim_severity <- round(sd(claim_severity_data$claim_severity, na.rm = TRUE), 0)
+
+# Boxplot
+claim_severity_box <- ggplot(claim_severity_data, aes(x = claim_severity, y = "")) +
+  geom_boxplot(
+    fill = "grey80",
+    colour = "grey30",
+    outlier.colour = "grey50",
+    outlier.alpha = 0.35
+  ) +
+  stat_summary(
+    fun = mean,
+    geom = "point",
+    colour = "black",
+    size = 2.5
+  ) +
+  coord_cartesian(xlim = c(0, 5000)) +
+  scale_x_continuous(
+    labels = scales::comma,
+    breaks = seq(0, 5000, by = 1000)
+  ) +
+  labs(
+    title = "Distribution of Claim Severity",
+    x = NULL,
+    y = NULL
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 13),
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.text.x = element_text(size = 8),
+    panel.grid.major.y = element_blank()
+  )
+
+# Histogram
+claim_severity_hist <- ggplot(claim_severity_data, aes(x = claim_severity)) +
+  geom_histogram(
+    binwidth = 250,
+    fill = "pink",
+    colour = "white"
+  ) +
+  geom_vline(
+    xintercept = median_claim_severity,
+    colour = "blue",
+    linetype = "dashed",
+    linewidth = 0.8
+  ) +
+  geom_vline(
+    xintercept = mean_claim_severity,
+    colour = "black",
+    linetype = "dashed",
+    linewidth = 0.8
+  ) +
+  annotate(
+    "text",
+    x = median_claim_severity + 140,
+    y = 36000,
+    label = paste0("Median = ", scales::comma(median_claim_severity)),
+    colour = "blue",
+    size = 3,
+    hjust = 0
+  ) +
+  annotate(
+    "text",
+    x = mean_claim_severity + 180,
+    y = 44000,
+    label = paste0("Mean = ", scales::comma(mean_claim_severity)),
+    colour = "black",
+    size = 3,
+    hjust = 0
+  ) +
+  annotate(
+    "text",
+    x = 3400,
+    y = 44000,
+    label = paste0("SD = ", scales::comma(sd_claim_severity)),
+    colour = "grey30",
+    size = 3
+  ) +
+  coord_cartesian(xlim = c(0, 5000)) +
+  scale_x_continuous(
+    labels = scales::comma,
+    breaks = seq(0, 5000, by = 1000)
+  ) +
+  scale_y_continuous(labels = scales::comma) +
+  labs(
+    subtitle = "Only policies with claims are included; x-axis is zoomed due to high-severity outliers",
+    x = "Claim Severity",
+    y = "Number of Policies"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.subtitle = element_text(size = 9),
+    axis.title = element_text(size = 9),
+    axis.text = element_text(size = 8)
+  )
+
+# Combine boxplot and histogram
+claim_severity_box / claim_severity_hist +
+  plot_layout(heights = c(1, 3))
+```
+
+
+**Key insight:**
+
+- Claim severity is strongly right-skewed
+- Median severity is around **498**
+- Mean severity is higher at around **849**
+- Standard deviation is around **2,936**
+
+::: {.notes}
+Claim severity is the main volatility concern. The distribution is strongly right-skewed, meaning most claims are relatively small, but a small number of expensive claims pull the mean above the median. The high standard deviation also shows that claim costs vary widely. This matters because even if most policies have no claims, a few severe claims can still affect profitability. Therefore, the insurer should investigate high-severity claims in more detail using claim-level data.
+:::
+
+## 12. Recommendations and Conclusion {.smaller}
+
+Recommendations:
+
+- Review comprehensive without excess (COMP_N) policies due to higher loss-making share
+- Investigate why loss ratio increased from 2022 to 2024
+- Monitor New Business profitability against Portfolio policies
+- Investigate the Bad bonus score anomaly
+- Analyse high-severity claims using more granular claim-level data
+
+Conclusion:
+
+The portfolio remains profitable, but rising loss ratio suggests emerging profitability pressure.
+
+::: {.notes}
+Overall, the portfolio is still profitable, but the rising loss ratio suggests that profitability pressure is emerging. Policy type, business type, bonus score and year show meaningful relationships with profitability. Claim severity appears to be the main source of volatility because a small number of expensive claims can pull average claim cost upward. The insurer should prioritise reviewing COMP_N policies, understanding the worsening loss ratio trend and studying high-severity claims in more detail.
+:::
