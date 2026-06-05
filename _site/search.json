@@ -144,14 +144,14 @@
     "href": "index.html",
     "title": "ISSS608-VAA",
     "section": "",
-    "text": "Welcome to ISSS608 Visual Analytics and Applications. In this website, you will find my coursework prepared for this course. Credits to Professor Kam Tin Seong for his valuable lessons and the course materials!\nIf you’re interested, you can navigate to the top right ‘About’ tab to find out more about me."
+    "text": "Welcome to ISSS608 Visual Analytics and Applications. In this website, you will find my coursework prepared for this course.\nCredits to Professor Kam Tin Seong for his valuable lessons and the course materials!\nIf you’re interested, you can navigate to the top right About tab to find out more about me."
   },
   {
     "objectID": "index.html#hello-my-name-is-serene-cheng.",
     "href": "index.html#hello-my-name-is-serene-cheng.",
     "title": "ISSS608-VAA",
     "section": "",
-    "text": "Welcome to ISSS608 Visual Analytics and Applications. In this website, you will find my coursework prepared for this course. Credits to Professor Kam Tin Seong for his valuable lessons and the course materials!\nIf you’re interested, you can navigate to the top right ‘About’ tab to find out more about me."
+    "text": "Welcome to ISSS608 Visual Analytics and Applications. In this website, you will find my coursework prepared for this course.\nCredits to Professor Kam Tin Seong for his valuable lessons and the course materials!\nIf you’re interested, you can navigate to the top right About tab to find out more about me."
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex07/Hands-on_Ex07a.html",
@@ -1888,5 +1888,12 @@
     "title": "Hands-on Exercise 5b",
     "section": "Getting started with corrplot",
     "text": "Getting started with corrplot\nBefore we can plot a corrgram using corrplot(), we need to compute the correlation matrix of wine data frame.\ncor() of R Stats is used to compute the correlation matrix of wine data frame below\n\nwine.cor &lt;- cor(wine[, 1:11])\n\nNext, corrplot() is used to plot the corrgram by using all the default setting as shown in the code chunk below.\n\ncorrplot(wine.cor)\n\n\n\n\n\n\n\n\nBy default, corrplot() uses circles to show correlations in a symmetric matrix. Blue represents positive correlations, while red represents negative correlations. The darker the colour, the stronger the relationship; the lighter the colour, the weaker the relationship."
+  },
+  {
+    "objectID": "index.html#recent-posts",
+    "href": "index.html#recent-posts",
+    "title": "ISSS608-VAA",
+    "section": "Recent Posts",
+    "text": "Recent Posts\n\n\n\n\n\n\n\nHands-on Exercise 7a\n\n\n\n\n\n\nJun 4, 2026\n\n\n\n\n\n\n\n\n\n\nHands-on Exercise 7b\n\n\n\n\n\n\nJun 4, 2026\n\n\n\n\n\n\n\n\n\n\nTake-Home Exercise 2\n\n\n\n\n\n\nJun 1, 2026\n\n\n\n\n\n\n\n\n\n\nTake-Home Exercise 1\n\n\n\n\n\n\nMay 22, 2026\n\n\n\n\n\n\n\n\n\n\nHands-on Exercise 5a\n\n\n\n\n\n\nMay 14, 2026\n\n\n\n\n\n\n\n\n\n\nHands-on Exercise 5b\n\n\n\n\n\n\nMay 14, 2026\n\n\n\n\n\n\nNo matching items"
   }
 ]

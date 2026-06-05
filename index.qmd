@@ -1,11 +1,36 @@
 ---
 title: "ISSS608-VAA"
+toc: false
+listing:
+  - id: recent-posts
+    contents:
+      - "Hands-on_Ex/**/*.qmd"
+      - "Take-Home_Ex/**/*.qmd"
+    sort: "date desc"
+    type: grid
+    max-items: 6
+    fields: [title, date, description]
 ---
 
 ## Hello, my name is ***Serene Cheng***.
 
-![](images/ChatGPT%20Image%20Apr%2022,%202026,%2004_37_30%20PM.png){fig-align="left" width="500"}
+:::: {.columns}
 
-Welcome to **ISSS608 Visual Analytics and Applications**. In this website, you will find my coursework prepared for this course. Credits to **Professor Kam Tin Seong** for his valuable lessons and the course materials!
+::: {.column width="40%"}
+![](images/ChatGPT%20Image%20Apr%2022,%202026,%2004_37_30%20PM.png){width="380"}
+:::
 
-If you're interested, you can navigate to the top right 'About' tab to find out more about me.
+::: {.column width="60%"}
+Welcome to **ISSS608 Visual Analytics and Applications**. In this website, you will find my coursework prepared for this course.
+
+Credits to **Professor Kam Tin Seong** for his valuable lessons and the course materials!
+
+If you're interested, you can navigate to the top right **About** tab to find out more about me.
+:::
+
+::::
+
+## Recent Posts
+
+::: {#recent-posts}
+:::

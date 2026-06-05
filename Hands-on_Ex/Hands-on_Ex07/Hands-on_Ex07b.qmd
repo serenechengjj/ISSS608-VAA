@@ -206,20 +206,19 @@ DT::datatable(words_by_newsgroup,
 
 The `ggwordcloud` package is used to create word clouds by newsgroup. This makes it easier to compare common words across different newsgroup categories.
 
-```{r}
-#| eval: false
-
-set.seed(1234)
-
+```{r top-words-by-newsgroup}
 words_by_newsgroup %>%
   group_by(newsgroup) %>%
-  slice_max(n, n = 30, with_ties = FALSE) %>%
+  slice_max(n, n = 5, with_ties = FALSE) %>%
   ungroup() %>%
-  ggplot(aes(label = word,
-             size = n)) +
-  geom_text_wordcloud() +
-  theme_minimal() +
-  facet_wrap(~newsgroup)
+  ggplot(aes(x = n,
+             y = reorder(word, n))) +
+  geom_col(fill = "lightblue") +
+  facet_wrap(~newsgroup, scales = "free_y") +
+  labs(x = "Word count",
+       y = NULL,
+       title = "Top 5 Words by Newsgroup") +
+  theme_minimal()
 ```
 
 # Basic Concept of TF-IDF
