@@ -71,47 +71,39 @@ motor_insurance_final <- motor_insurance_selected %>%
 
 ### Executive Summary
 
-<div style="font-size: 0.75em;">
-
-**Serene Cheng**  
-ISSS608 Visual Analytics and Applications  
+::: {style="font-size: 0.75em;"}
+**Serene Cheng**\
+ISSS608 Visual Analytics and Applications\
 May 2026
+:::
 
-</div>
-
-::: {.notes}
+::: notes
 This presentation summarises the key findings from my take-home exercise on a Spanish motor insurance portfolio. The focus is on understanding portfolio profitability and volatility using visual analytics and statistical validation. Instead of presenting every chart from the technical report, this executive summary highlights the main business patterns that matter for decision-making: portfolio composition, profitability movement, risk segments, claim frequency and claim severity.
 :::
 
 ## Contents {.smaller}
 
-:::: {.columns}
-
+::::: columns
 ::: {.column width="50%"}
-
-1. Business context and objective  
-2. Data and analytical approach  
-3. Portfolio composition  
-4. Policyholder and vehicle profile  
-5. Profitability overview  
-6. Policy type and loss ratio  
-
+1.  Business context and objective\
+2.  Data and analytical approach\
+3.  Portfolio composition\
+4.  Policyholder and vehicle profile\
+5.  Profitability overview\
+6.  Policy type and loss ratio
 :::
 
 ::: {.column width="50%"}
-
-7. Profitability trend over time  
-8. Business type and underwriting profit  
-9. Bonus score pattern  
-10. Claim frequency  
-11. Claim severity  
-12. Recommendations and conclusion  
-
+7.  Profitability trend over time\
+8.  Business type and underwriting profit\
+9.  Bonus score pattern\
+10. Claim frequency\
+11. Claim severity\
+12. Recommendations and conclusion
 :::
+:::::
 
-::::
-
-::: {.notes}
+::: notes
 I will first introduce the business context and data approach, then highlight the main visual findings. The middle slides focus on profitability because this is the key business outcome. The later slides cover claim frequency and claim severity, which help explain portfolio volatility. I end with recommendations that the insurer can consider for pricing, underwriting and further investigation.
 :::
 
@@ -121,12 +113,12 @@ Insurers need to understand **which portfolio segments drive poor profitability 
 
 This study aims to:
 
-- Explore policy, driver, vehicle and geographic characteristics
-- Analyse profitability using **loss ratio** and **underwriting profit**
-- Analyse volatility using **claim frequency** and **claim severity**
-- Validate key visual patterns using statistical tests
+-   Explore policy, driver, vehicle and geographic characteristics
+-   Analyse profitability using **loss ratio** and **underwriting profit**
+-   Analyse volatility using **claim frequency** and **claim severity**
+-   Validate key visual patterns using statistical tests
 
-::: {.notes}
+::: notes
 The business problem is that poor profitability in an insurance portfolio may not be caused by one obvious factor. It can be influenced by policy coverage, customer profile, vehicle characteristics, claim behaviour and changes over time. Therefore, the objective is not just to describe the dataset, but to identify which segments appear linked to weaker profitability or higher volatility. Loss ratio is used as the main profitability indicator, while claim frequency and claim severity are used to understand claim behaviour.
 :::
 
@@ -134,19 +126,19 @@ The business problem is that poor profitability in an insurance portfolio may no
 
 Dataset used:
 
-- Spanish motor insurance portfolio
-- **354,140 raw records**
-- 1,802 rows removed due to missing values
-- Final analysis focused on selected policy, vehicle, claim and premium variables
+-   Spanish motor insurance portfolio
+-   **354,140 raw records**
+-   1,802 rows removed due to missing values
+-   Final analysis focused on selected policy, vehicle, claim and premium variables
 
 Derived measures:
 
-- `loss_ratio = total_incurred / total_premium`
-- `underwriting_profit = total_premium - total_incurred`
-- `claim_frequency = total_claims / total_exposure`
-- `claim_severity = total_incurred / total_claims`
+-   `loss_ratio = total_incurred / total_premium`
+-   `underwriting_profit = total_premium - total_incurred`
+-   `claim_frequency = total_claims / total_exposure`
+-   `claim_severity = total_incurred / total_claims`
 
-::: {.notes}
+::: notes
 The raw dataset contains more than 354,000 policy-year records. After removing missing values, only around 0.51% of records were dropped, so the data loss is small. I derived several insurance measures to support the analysis. Loss ratio shows how much of premium is used to cover claims. Underwriting profit gives a simplified profitability view before expenses and other adjustments. Claim frequency measures how often claims occur after adjusting for exposure, while claim severity measures the average claim amount when claims occur.
 :::
 
@@ -227,20 +219,18 @@ ggplot(policy_type_summary, aes(x = policy_type, y = n, fill = policy_type)) +
 
 **Key insight:**
 
-- CC policies dominate the portfolio at **204,317 policies (58.0%)**
-- COMP_E is second largest at **90,320 policies (25.6%)**
-- TP and COMP_N form smaller shares
+-   CC policies dominate the portfolio at **204,317 policies (58.0%)**
+-   COMP_E is second largest at **90,320 policies (25.6%)**
+-   TP and COMP_N form smaller shares
 
-::: {.notes}
+::: notes
 This chart shows that the portfolio is highly concentrated in CC policies, which make up 58% of the portfolio. This means the insurer’s exposure is mainly in broader coverage products rather than basic third-party-only policies. This is important because policy mix can affect both premium level and claim cost. Even if some policy types are smaller in count, they may still be important if they have weaker profitability or higher loss-making shares.
 :::
 
 ## 4. Policyholder and Vehicle Profile {.smaller}
 
-:::: {.columns}
-
+::::: columns
 ::: {.column width="50%"}
-
 ```{r}
 #| echo: false
 #| fig-width: 5
@@ -259,11 +249,9 @@ ggplot(motor_insurance_final, aes(x = driver_age)) +
   coord_cartesian(xlim = c(20, 85)) +
   theme_minimal()
 ```
-
 :::
 
 ::: {.column width="50%"}
-
 ```{r}
 #| echo: false
 #| fig-width: 5
@@ -284,18 +272,16 @@ ggplot(motor_insurance_final, aes(x = vehicle_value)) +
   scale_y_continuous(labels = scales::comma) +
   theme_minimal()
 ```
-
 :::
-
-::::
+:::::
 
 **Key insight:**
 
-- Drivers are mostly concentrated between **35 and 65 years old**
-- Vehicle value is right-skewed, with median **24,687** and mean **26,937**
-- High-value vehicles may contribute to higher claim severity even if they form a smaller group
+-   Drivers are mostly concentrated between **35 and 65 years old**
+-   Vehicle value is right-skewed, with median **24,687** and mean **26,937**
+-   High-value vehicles may contribute to higher claim severity even if they form a smaller group
 
-::: {.notes}
+::: notes
 The portfolio mainly consists of middle-aged drivers, with fewer very young or very old drivers. Vehicle value is right-skewed, meaning most vehicles are lower to mid-value, while a smaller number of high-value vehicles pull the mean upward. This matters because high-value vehicles may not dominate the portfolio by count, but they could still contribute to larger claim amounts if accidents occur. However, later correlation results suggest that continuous variables such as age and vehicle value are not strong standalone predictors.
 :::
 
@@ -348,11 +334,11 @@ motor_insurance_final %>%
 
 **Key insight:**
 
-- Most policies fall under **No Loss**
-- Smaller group is **Profitable / Acceptable**
-- Loss-making group is smaller but important
+-   Most policies fall under **No Loss**
+-   Smaller group is **Profitable / Acceptable**
+-   Loss-making group is smaller but important
 
-::: {.notes}
+::: notes
 The loss ratio distribution is zero-heavy because many insurance policies do not record claims within the exposure period. This is expected in insurance portfolios. However, the smaller loss-making group is still important because these policies have incurred claims greater than premiums collected. From a management perspective, the key issue is not just how many policies are loss-making, but whether specific segments have a higher concentration of these policies.
 :::
 
@@ -416,12 +402,12 @@ ggplot(
 
 **Key insight:**
 
-- COMP_N has the highest loss-making share at **20.8%**
-- TP and TPG perform better, with **94.7%** and **91.2%** no-loss policies
-- Chi-square test confirms significant association:  
-  **χ² = 7921.4, p < 0.001**
+-   COMP_N has the highest loss-making share at **20.8%**
+-   TP and TPG perform better, with **94.7%** and **91.2%** no-loss policies
+-   Chi-square test confirms significant association:\
+    **χ² = 7921.4, p \< 0.001**
 
-::: {.notes}
+::: notes
 This is one of the strongest business findings. Policy type is significantly associated with loss ratio group. COMP_N has the highest loss-making share, suggesting that this policy type may need closer pricing or underwriting review. In contrast, TP and TPG show very high no-loss shares, which suggests stronger profitability performance. The Chi-square test supports that the difference across policy types is statistically significant and not just a visual pattern.
 :::
 
@@ -501,12 +487,12 @@ ggplot(
 
 **Key insight:**
 
-- Average loss ratio increased from **0.67 in 2022**
-- To **0.73 in 2023**
-- To **0.87 in 2024**
-- Still below break-even point of 1.00, but moving closer
+-   Average loss ratio increased from **0.67 in 2022**
+-   To **0.73 in 2023**
+-   To **0.87 in 2024**
+-   Still below break-even point of 1.00, but moving closer
 
-::: {.notes}
+::: notes
 The portfolio is still profitable on average because the loss ratio remains below 1.00. However, the upward trend is a warning sign. Average loss ratio increased from 0.67 in 2022 to 0.87 in 2024, meaning a larger share of premium is being used to cover incurred claims. Pairwise Wilcoxon tests show that loss ratio differs significantly across all year pairs, with adjusted p-values below 0.001. This suggests that profitability has weakened meaningfully over time.
 :::
 
@@ -595,11 +581,11 @@ ggplot(
 
 **Key insight:**
 
-- Portfolio policies show higher underwriting profit than New Business policies
-- Wilcoxon test confirms significant difference: **p < 0.001**
-- Existing policies may be more profitable than newly acquired policies
+-   Portfolio policies show higher underwriting profit than New Business policies
+-   Wilcoxon test confirms significant difference: **p \< 0.001**
+-   Existing policies may be more profitable than newly acquired policies
 
-::: {.notes}
+::: notes
 This slide compares underwriting profit between new business and existing portfolio policies. The finding suggests that portfolio policies perform better than new business policies. This may happen because existing policies have more stable risk profiles, better pricing history or improved renewal selection. The Wilcoxon test confirms that the difference is statistically significant. For the insurer, this means acquisition growth should be monitored carefully to ensure that new business is not weakening overall profitability.
 :::
 
@@ -704,12 +690,12 @@ ggplot(
 
 **Key insight:**
 
-- Good bonus score dominates the portfolio at **96.5%**
-- Underwriting profit differs significantly across bonus score groups
-- Kruskal-Wallis result: **H(2) = 977.21, p < 0.001**
-- Bad group shows highest median profit, but group size is small
+-   Good bonus score dominates the portfolio at **96.5%**
+-   Underwriting profit differs significantly across bonus score groups
+-   Kruskal-Wallis result: **H(2) = 977.21, p \< 0.001**
+-   Bad group shows highest median profit, but group size is small
 
-::: {.notes}
+::: notes
 This finding is interesting because it is counterintuitive. We might expect better bonus scores to always show higher profitability, but the Bad group shows the highest median underwriting profit. However, this should not be over-interpreted because the Bad group is very small compared with the Good group. The result may be affected by pricing, coverage mix or small-group effects. The statistical test shows that the groups differ significantly, but further investigation is needed before making business decisions.
 :::
 
@@ -764,11 +750,11 @@ motor_insurance_final %>%
 
 **Key insight:**
 
-- **301,814 policies (85.7%)** have no claims
-- **17,911 policies (5.1%)** have low claim frequency
-- **32,565 policies (9.2%)** have high claim frequency
+-   **301,814 policies (85.7%)** have no claims
+-   **17,911 policies (5.1%)** have low claim frequency
+-   **32,565 policies (9.2%)** have high claim frequency
 
-::: {.notes}
+::: notes
 Claim frequency is also zero-heavy, which is normal for motor insurance because most policyholders do not make claims in a given period. The majority of policies fall under the no-claim group. However, the high claim frequency group still matters because repeated claims can create volatility and may signal riskier behaviour or exposure. This slide helps separate claim occurrence from claim size, which is important because profitability pressure can come from either frequent claims or severe claims.
 :::
 
@@ -892,15 +878,14 @@ claim_severity_box / claim_severity_hist +
   plot_layout(heights = c(1, 3))
 ```
 
-
 **Key insight:**
 
-- Claim severity is strongly right-skewed
-- Median severity is around **498**
-- Mean severity is higher at around **849**
-- Standard deviation is around **2,936**
+-   Claim severity is strongly right-skewed
+-   Median severity is around **498**
+-   Mean severity is higher at around **849**
+-   Standard deviation is around **2,936**
 
-::: {.notes}
+::: notes
 Claim severity is the main volatility concern. The distribution is strongly right-skewed, meaning most claims are relatively small, but a small number of expensive claims pull the mean above the median. The high standard deviation also shows that claim costs vary widely. This matters because even if most policies have no claims, a few severe claims can still affect profitability. Therefore, the insurer should investigate high-severity claims in more detail using claim-level data.
 :::
 
@@ -908,16 +893,16 @@ Claim severity is the main volatility concern. The distribution is strongly righ
 
 Recommendations:
 
-- Review comprehensive without excess (COMP_N) policies due to higher loss-making share
-- Investigate why loss ratio increased from 2022 to 2024
-- Monitor New Business profitability against Portfolio policies
-- Investigate the Bad bonus score anomaly
-- Analyse high-severity claims using more granular claim-level data
+-   Review comprehensive without excess (COMP_N) policies due to higher loss-making share
+-   Investigate why loss ratio increased from 2022 to 2024
+-   Monitor New Business profitability against Portfolio policies
+-   Investigate the Bad bonus score anomaly
+-   Analyse high-severity claims using more granular claim-level data
 
 Conclusion:
 
 The portfolio remains profitable, but rising loss ratio suggests emerging profitability pressure.
 
-::: {.notes}
+::: notes
 Overall, the portfolio is still profitable, but the rising loss ratio suggests that profitability pressure is emerging. Policy type, business type, bonus score and year show meaningful relationships with profitability. Claim severity appears to be the main source of volatility because a small number of expensive claims can pull average claim cost upward. The insurer should prioritise reviewing COMP_N policies, understanding the worsening loss ratio trend and studying high-severity claims in more detail.
 :::

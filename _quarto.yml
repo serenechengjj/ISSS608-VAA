@@ -33,12 +33,20 @@ website:
             href: "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05d.html"
           - text: "Hands-on Exercise 5e"
             href: "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05e.html"
+          - text: "Hands-on Exercise 7a"
+            href: "Hands-on_Ex/Hands-on_Ex07/Hands-on_Ex07a.html"
+          - text: "Hands-on Exercise 7b"
+            href: "Hands-on_Ex/Hands-on_Ex07/Hands-on_Ex07b.html"
+
       - text: "Take-Home Exercise"
         menu:
-          - text: "Technical Report"
+          - text: "1: Technical Report"
             href: "Take-Home_Ex/Take-Home_Ex1/Take-Home_Ex01.html"
-          - text: "Executive Summary"
+          - text: "1: Executive Summary"
             href: "Take-Home_Ex/Take-Home_Ex1/Executive_Summary.html"
+          - text: "2: Technical Report"
+            href: "Take-Home_Ex/Take-Home_Ex2/Take-Home_Ex02.html"
+
     right:
       - href: index.qmd
         text: Home
@@ -50,5 +58,6 @@ format:
     theme: journal
     css: styles.css
     toc: true
+    page-layout: full
 
 editor: visual

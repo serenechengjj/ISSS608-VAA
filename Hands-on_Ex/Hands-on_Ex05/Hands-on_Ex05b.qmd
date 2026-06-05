@@ -98,7 +98,7 @@ pairs(wine[,2:12],
       upper.panel = panel.cor)
 ```
 
-# Visualising Correlation Matrix: ggcormat() method
+# Visualising Correlation Matrix: ggcorrmat() method
 
 One of the major limitation of the correlation matrix is: the scatter plots appear very cluttered when the number of observations is relatively large (i.e. more than 500 observations). To overcome this problem, **Corrgram** data visualisation technique suggested by D. J. Murdoch and E. D. Chow (1996) and Friendly, M (2002) and will be used.
 
@@ -151,7 +151,6 @@ ggplot.component = list(
 
 `ggcorrmat()` = one overall correlation chart `grouped_ggcorrmat()` = separate correlation charts for each group/category, like red wine vs white wine.
 
-
 ```{r}
 #| fig-width: 12
 #| fig-height: 14
@@ -177,7 +176,6 @@ grouped_ggcorrmat(
   )
 )
 ```
-
 
 -   to build a facet plot, the only argument needed is `grouping.var`.
 
@@ -225,7 +223,7 @@ corrplot(wine.cor,
 
 ## Working with layout
 
-*corrplor()* supports three layout types, namely: “full”, “upper” or “lower”. The default is “full” displaying full matrix. The default setting can be changed by using the *type* argument of *corrplot()*.
+*corrplot()* supports three layout types, namely: “full”, “upper” or “lower”. The default is “full” displaying full matrix. The default setting can be changed by using the *type* argument of *corrplot()*.
 
 ```{r}
 corrplot(wine.cor, 
