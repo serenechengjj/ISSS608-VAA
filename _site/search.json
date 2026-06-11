@@ -1894,7 +1894,7 @@
     "href": "index.html#recent-posts",
     "title": "ISSS608-VAA",
     "section": "Recent Posts",
-    "text": "Recent Posts\n\n\n\n\n\n\n\nHands-on Exercise 7a\n\n\n\n\n\n\nJun 4, 2026\n\n\n\n\n\n\n\n\n\n\nHands-on Exercise 7b\n\n\n\n\n\n\nJun 4, 2026\n\n\n\n\n\n\n\n\n\n\nTake-Home Exercise 2\n\n\n\n\n\n\nJun 1, 2026\n\n\n\n\n\n\n\n\n\n\nTake-Home Exercise 1\n\n\n\n\n\n\nMay 22, 2026\n\n\n\n\n\n\n\n\n\n\nHands-on Exercise 5a\n\n\n\n\n\n\nMay 14, 2026\n\n\n\n\n\n\n\n\n\n\nHands-on Exercise 5b\n\n\n\n\n\n\nMay 14, 2026\n\n\n\n\n\n\nNo matching items"
+    "text": "Recent Posts\n\n\n\n\n\n\n\nHands-on Exercise 8\n\n\n\n\n\n\nJun 11, 2026\n\n\n\n\n\n\n\n\n\n\nHands-on Exercise 7a\n\n\n\n\n\n\nJun 4, 2026\n\n\n\n\n\n\n\n\n\n\nHands-on Exercise 7b\n\n\n\n\n\n\nJun 4, 2026\n\n\n\n\n\n\n\n\n\n\nTake-Home Exercise 2\n\n\n\n\n\n\nJun 1, 2026\n\n\n\n\n\n\n\n\n\n\nTake-Home Exercise 1\n\n\n\n\n\n\nMay 22, 2026\n\n\n\n\n\n\n\n\n\n\nHands-on Exercise 5a\n\n\n\n\n\n\nMay 14, 2026\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "Take-Home_Ex/Take-Home_Ex2/Take-Home_Ex02.html#importing-json-files",
@@ -2049,5 +2049,96 @@
     "title": "Take-Home Exercise 2",
     "section": "",
     "text": "This project is based on Mini-Challenge 2 of the VAST Challenge 2026 and addresses the following questions:\n\n\n\n\n\n\n\n#\nQuestion\n\n\n\n\n1a\nHow was the anomalous SaidIT post made? Provide a detailed view of the exact chain of events leading up to it.\n\n\n1b\nProvide a system overview that contextualises this event chain within the broader system activity.\n\n\n2\nWhat does the post “mean”? What is the probable origin of its content, and what reasoning supports this?\n\n\n3a\nAre there prior instances of this behaviour? Investigate historical system activity and contrast any earlier occurrences with the most recent incident.\n\n\n3b\nWhat system change would make this behaviour harder to repeat? Identify one intervention point and use the data to illustrate why it would be effective."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html",
+    "href": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html",
+    "title": "Hands-on Exercise 8",
+    "section": "",
+    "text": "I learnt how time-series data can be visualised using different techniques such as calendar heatmaps, cycle plots and slopegraphs. The calendar heatmap was especially useful because it combines the day and hour into one visual, making it easier to identify periods with higher activity. I also learnt how functions such as lubridate, group_by() and facet_wrap() can be used to prepare time-related data and compare patterns across different groups."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#installing-and-loading-r-packages",
+    "href": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#installing-and-loading-r-packages",
+    "title": "Hands-on Exercise 8",
+    "section": "Installing and loading R packages",
+    "text": "Installing and loading R packages\n\n\nShow the code\npacman::p_load(scales, viridis, lubridate, ggthemes,\n               gridExtra, readxl, knitr, data.table,\n               CGPfunctions, ggHoriPlot, tidyverse)"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#the-data",
+    "href": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#the-data",
+    "title": "Hands-on Exercise 8",
+    "section": "The Data",
+    "text": "The Data\neventlog.csv file will be used. This data file consists of 199,999 rows of time-series cyber attack records by country."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#importing-the-data",
+    "href": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#importing-the-data",
+    "title": "Hands-on Exercise 8",
+    "section": "Importing the data",
+    "text": "Importing the data\n\n\nShow the code\nattacks &lt;- read_csv(\"data/eventlog.csv\")"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#examine-the-data-structure",
+    "href": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#examine-the-data-structure",
+    "title": "Hands-on Exercise 8",
+    "section": "Examine the data structure",
+    "text": "Examine the data structure\nkable() can be used to review the structure of the imported data frame.\n\n\nShow the code\nkable(head(attacks))\n\n\n\n\n\ntimestamp\nsource_country\ntz\n\n\n\n\n2015-03-12 15:59:16\nCN\nAsia/Shanghai\n\n\n2015-03-12 16:00:48\nFR\nEurope/Paris\n\n\n2015-03-12 16:02:26\nCN\nAsia/Shanghai\n\n\n2015-03-12 16:02:38\nUS\nAmerica/Chicago\n\n\n2015-03-12 16:03:22\nCN\nAsia/Shanghai\n\n\n2015-03-12 16:03:45\nCN\nAsia/Shanghai\n\n\n\n\n\nThe dataset contains three columns: timestamp, source_country, and tz.\n\ntimestamp records the date and time of each attack in POSIXct format.\nsource_country indicates the country where the attack originated, represented using the ISO 3166-1 alpha-2 country code.\ntz represents the time zone associated with the source IP address."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#data-preparation",
+    "href": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#data-preparation",
+    "title": "Hands-on Exercise 8",
+    "section": "Data preparation",
+    "text": "Data preparation\n\n1. Deriving weekday and hour of day fields\nTwo new fields namely wkday and hour need to be derived. In this step, we will write a function to perform the task.\n\n\nShow the code\nmake_hr_wkday &lt;- function(ts, sc, tz) {\n  real_times &lt;- ymd_hms(ts, \n                        tz = tz[1], \n                        quiet = TRUE)\n  dt &lt;- data.table(source_country = sc,\n                   wkday = weekdays(real_times),\n                   hour = hour(real_times))\n  return(dt)\n}\n\n\nNote: The ymd_hms() and hour() functions are provided by the lubridate package, which is loaded using pacman::p_load(). The weekdays() function is available in base R, so no additional package is required.\n\n\n2. Deriving the attacks tibble data frame\n\n\nShow the code\nwkday_levels &lt;- c('Saturday', 'Friday', \n                  'Thursday', 'Wednesday', \n                  'Tuesday', 'Monday', \n                  'Sunday')\n\nattacks &lt;- attacks %&gt;%\n  group_by(tz) %&gt;%\n  do(make_hr_wkday(.$timestamp, \n                   .$source_country, \n                   .$tz)) %&gt;% \n  ungroup() %&gt;% \n  mutate(wkday = factor(\n    wkday, levels = wkday_levels),\n    hour  = factor(\n      hour, levels = 0:23))\n\n\nBeside extracting the necessary data into attacks data frame, mutate() of dplyr package is used to convert wkday and hour fields into factor so they’ll be ordered when plotting\nTable below shows the tidy tibble table after processing.\n\n\nShow the code\nkable(head(attacks))\n\n\n\n\n\ntz\nsource_country\nwkday\nhour\n\n\n\n\nAfrica/Cairo\nBG\nSaturday\n20\n\n\nAfrica/Cairo\nTW\nSunday\n6\n\n\nAfrica/Cairo\nTW\nSunday\n8\n\n\nAfrica/Cairo\nCN\nSunday\n11\n\n\nAfrica/Cairo\nUS\nSunday\n15\n\n\nAfrica/Cairo\nCA\nMonday\n11"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#building-calendar-heatmaps",
+    "href": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#building-calendar-heatmaps",
+    "title": "Hands-on Exercise 8",
+    "section": "Building Calendar heatmaps",
+    "text": "Building Calendar heatmaps\n\n\nShow the code\ngrouped &lt;- attacks %&gt;% \n  count(wkday, hour) %&gt;% \n  ungroup() %&gt;%\n  na.omit()\n\nggplot(grouped, \n       aes(hour, \n           wkday, \n           fill = n)) + \ngeom_tile(color = \"white\", \n          size = 0.1) + \ntheme_tufte(base_family = \"Helvetica\") + \ncoord_equal() +\nscale_fill_gradient(name = \"# of attacks\",\n                    low = \"sky blue\", \n                    high = \"dark blue\") +\nlabs(x = NULL, \n     y = NULL, \n     title = \"Attacks by weekday and time of day\") +\ntheme(axis.ticks = element_blank(),\n      plot.title = element_text(hjust = 0.5),\n      legend.title = element_text(size = 8),\n      legend.text = element_text(size = 6) )\n\n\n\n\n\n\n\n\n\nThe code first groups the attack records by weekday and hour, then counts the number of attacks for each combination. Missing values are removed before geom_tile() is used to create the heatmap. theme_tufte() simplifies the chart design, coord_equal() keeps the tiles evenly proportioned, and scale_fill_gradient() uses colour intensity to represent the number of attacks.\nThen we can simply group the count by hour and wkday and plot it, since we know that we have values for every combination there’s no need to further preprocess the data."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#building-multiple-calendar-heatmaps",
+    "href": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#building-multiple-calendar-heatmaps",
+    "title": "Hands-on Exercise 8",
+    "section": "Building multiple calendar heatmaps",
+    "text": "Building multiple calendar heatmaps\nWe will be building multiple heatmaps for the top four countries with the highest number of attacks.\n\nPlotting multiple calendar heatmaps\n\n1. Deriving attack by country object\nTo identify top 4 countries with highest number of attacks we need to:\n\ncount the number of attacks by country,\ncalculate the percent of attackes by country, and\nsave the results in a tibble data frame.\n\n\n\nShow the code\nattacks_by_country &lt;- count(\n  attacks, source_country) %&gt;%\n  mutate(percent = percent(n/sum(n))) %&gt;%\n  arrange(desc(n))\n\n\n\n\n2. Preparing the tidy data frame\nWe are required to extract the attack records of the top 4 countries from attacks data frame and save the data in a new tibble data frame (i.e. top4_attacks).\n\n\nShow the code\ntop4 &lt;- attacks_by_country$source_country[1:4]\ntop4_attacks &lt;- attacks %&gt;%\n  filter(source_country %in% top4) %&gt;%\n  count(source_country, wkday, hour) %&gt;%\n  ungroup() %&gt;%\n  mutate(source_country = factor(\n    source_country, levels = top4)) %&gt;%\n  na.omit()\n\n\n\n\n3. Plotting multiple calendar heatmap by using ggplot2 package\n\n\nShow the code\nggplot(top4_attacks, \n       aes(hour, \n           wkday, \n           fill = n)) + \n  geom_tile(color = \"white\", \n          size = 0.1) + \n  theme_tufte(base_family = \"Helvetica\") + \n  coord_equal() +\n  scale_fill_gradient(name = \"# of attacks\",\n                    low = \"sky blue\", \n                    high = \"dark blue\") +\n  facet_wrap(~source_country, ncol = 2) +\n  labs(x = NULL, y = NULL, \n     title = \"Attacks on top 4 countries by weekday and time of day\") +\n  theme(axis.ticks = element_blank(),\n        axis.text.x = element_text(size = 7),\n        plot.title = element_text(hjust = 0.5),\n        legend.title = element_text(size = 8),\n        legend.text = element_text(size = 6) )"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#data-import",
+    "href": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#data-import",
+    "title": "Hands-on Exercise 8",
+    "section": "1. Data import",
+    "text": "1. Data import\narrivals_by_air.xlsx will be used.\nThe code chunk below imports arrivals_by_air.xlsx by using read_excel() of readxl package and save it as a tibble data frame called air.\n\n\nShow the code\nair &lt;- read_excel(\"data/arrivals_by_air.xlsx\")"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#deriving-month-and-year-fields",
+    "href": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#deriving-month-and-year-fields",
+    "title": "Hands-on Exercise 8",
+    "section": "2. Deriving month and year fields",
+    "text": "2. Deriving month and year fields\nNext, two new fields called month and year are derived from Month-Year field.\n\n\nShow the code\nair$month &lt;- factor(month(air$`Month-Year`), \n                    levels=1:12, \n                    labels=month.abb, \n                    ordered=TRUE) \nair$year &lt;- year(ymd(air$`Month-Year`))"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#extracting-target-country",
+    "href": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#extracting-target-country",
+    "title": "Hands-on Exercise 8",
+    "section": "3. Extracting target country",
+    "text": "3. Extracting target country\nNext, the code chunk below is use to extract data for the target country (i.e. Vietnam)\n\n\nShow the code\nVietnam &lt;- air %&gt;% \n  select(`Vietnam`, \n         month, \n         year) %&gt;%\n  filter(year &gt;= 2010)"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#computing-year-average-arrivals-by-month",
+    "href": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#computing-year-average-arrivals-by-month",
+    "title": "Hands-on Exercise 8",
+    "section": "4. Computing year average arrivals by month",
+    "text": "4. Computing year average arrivals by month\nThe code chunk below uses group_by() and summarise() of dplyr to compute year average arrivals by month.\n\n\nShow the code\nhline.data &lt;- Vietnam %&gt;% \n  group_by(month) %&gt;%\n  summarise(avgvalue = mean(`Vietnam`))"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#plotting-the-cycle-plot",
+    "href": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#plotting-the-cycle-plot",
+    "title": "Hands-on Exercise 8",
+    "section": "5. Plotting the cycle plot",
+    "text": "5. Plotting the cycle plot\nThe code chunk below is used to plot the cycle plot\n\n\nShow the code\nggplot() + \n  geom_line(data=Vietnam,\n            aes(x=year, \n                y=`Vietnam`, \n                group=month), \n            colour=\"black\") +\n  geom_hline(aes(yintercept=avgvalue), \n             data=hline.data, \n             linetype=6, \n             colour=\"red\", \n             size=0.5) + \n  facet_grid(~month) +\n  labs(axis.text.x = element_blank(),\n       title = \"Visitor arrivals from Vietnam by air, Jan 2010-Dec 2019\") +\n  xlab(\"\") +\n  ylab(\"No. of Visitors\") +\n  theme_tufte(base_family = \"Helvetica\")"
   }
 ]
