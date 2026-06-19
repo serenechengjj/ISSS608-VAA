@@ -360,4 +360,5 @@ rice %>%
     Caption = "Prepared by: Serene Cheng under the guidance of Dr. Kam Tin Seong"
   )
 ```
+
 For effective data visualisation design, factor() is used convert the value type of Year field from numeric to factor.
