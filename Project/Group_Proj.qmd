@@ -1,0 +1,541 @@
+---
+title: "Group_Proj"
+subtitle: "MC1 — Multi-Agent Crisis: Data Preparation and Exploration"
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    code-fold: true
+    code-summary: "Show the code"
+    number-sections: true
+---
+
+## Overview
+
+This page works through the VAST Challenge 2026 Mini-Challenge 1 dataset: a property-technology company, **TenantThread**, runs seven AI agents through a public-relations crisis while a merger with **CivicLoom** (codename *Project HarborCrest*) sits under a same-day embargo. A compliance agent, the **Judge**, is dropped into the communications huddle partway through the timeline to monitor for violations. The data records 23 rounds of agent activity, from a quiet planning week down to an hour-by-hour reconstruction of the day the embargo breaks and a damaging exposé runs.
+
+The question this page sets up for the rest of the analysis: **did embargoed information leak through channels the Judge could not see, and if so, who said it, when, and how loud was the private alarm before it happened?**
+
+```{r}
+#| label: setup
+#| message: false
+#| warning: false
+pacman::p_load(jsonlite, tidyverse, lubridate, knitr, scales,
+               tidygraph, ggraph, igraph,
+               tidytext, textdata,
+               ggiraph, DT)
+
+# small null-coalescing helper, since the raw JSON has many optional fields
+`%||%` <- function(x, y) if (is.null(x) || length(x) == 0) y else x
+```
+
+## Loading the raw data
+
+The source file is a single nested JSON document holding one object per round. Reading it with `simplifyDataFrame = FALSE` keeps every round as a plain list, which is safer than letting `jsonlite` guess a table shape — several fields (`recipients`, `internal_state`, `media_events`) are themselves lists of uneven length or can be empty, and an auto-simplified data frame silently drops or mis-aligns those.
+
+```{r}
+#| label: load-data
+mc1_raw <- fromJSON("data/MC1_final_00.json", simplifyDataFrame = FALSE)
+rounds_raw <- mc1_raw$rounds
+length(rounds_raw)
+```
+
+```{r}
+#| label: peek-round
+#| code-summary: "A look at one round's shape"
+str(rounds_raw[[1]], max.level = 2, list.len = 8)
+```
+
+Each round carries an `hour`, an `environment_context` block (the headline, narrative, market snapshot, media and social signals for that hour), and a `communications` list — the actual messages agents sent that round. There is no separate `agent_outputs` wrapper in this build of the data; `communications` sits directly on the round, and each message itself carries the sending agent's `internal_state` (its private *reacting*, *rationalizing* and *deliberating* text) alongside the public `content`.
+
+## Flattening to working tables
+
+Three tables are built from the nested rounds: a **message table** (one row per message), a **round table** (one row per round, with the environment context), and a **network edge table** (directed links inferred from named recipients). All three are assembled with `purrr::map_dfr()` over the raw list rather than a single wide unnest, so a missing field in one message never breaks the others.
+
+### The round table
+
+```{r}
+#| label: rounds-table
+rounds_tbl <- map_dfr(seq_along(rounds_raw), function(i) {
+  rd <- rounds_raw[[i]]
+  ec <- rd$environment_context
+
+  tibble(
+    round_idx        = i,
+    hour             = rd$hour,
+    event_headline   = ec$event_headline %||% NA_character_,
+    event_narrative  = ec$event_narrative %||% NA_character_,
+    stock_price      = ec$market_snapshot$stock_price %||% NA_character_,
+    percent_change   = ec$market_snapshot$percent_change %||% NA_character_,
+    sentiment        = ec$market_snapshot$sentiment %||% NA_character_,
+    n_hashtags       = length(ec$market_snapshot$trending_hashtags %||% list()),
+    n_media_events   = length(ec$media_events %||% list()),
+    n_external_acts  = length(ec$external_actor_actions %||% list()),
+    n_messages       = length(rd$communications %||% list())
+  )
+}) %>%
+  mutate(
+    hour_dt      = ymd_hms(hour),
+    percent_change_num = parse_number(percent_change),
+    is_crisis_day = date(hour_dt) == as_date("2046-06-05")
+  )
+
+glimpse(rounds_tbl)
+```
+
+```{r}
+#| label: rounds-check
+rounds_tbl %>%
+  select(round_idx, hour, event_headline, n_messages, is_crisis_day) %>%
+  kable()
+```
+
+The first 13 rounds are spaced days apart and carry a daily headline. From round 14 the scenario switches to an hour-by-hour reconstruction of a single day, 5 June 2046, ending at the 6:00 PM round when the embargo is scheduled to lift. That structural break — daily cadence, then hourly — is the first thing the round table makes visible, and it is the natural place to split "before" from "during" the crisis in every chart that follows.
+
+### The message table
+
+```{r}
+#| label: messages-table
+flatten_message <- function(m, round_idx, round_hour) {
+  recipients <- m$recipients %||% character(0)
+
+  tibble(
+    round_idx         = round_idx,
+    round_hour        = round_hour,
+    message_id        = m$message_id,
+    agent_id          = m$agent_id,
+    agent_role        = m$agent_role,
+    agent_label       = m$agent_label,
+    channel           = m$channel,
+    message_type      = m$message_type,
+    responding_to     = m$responding_to %||% NA_character_,
+    recipients_csv    = if (length(recipients) == 0) NA_character_
+                         else paste(recipients, collapse = ";"),
+    recipients_is_all = "ALL" %in% recipients,
+    content           = m$content %||% "",
+    reacting          = m$internal_state$reacting %||% NA_character_,
+    rationalizing     = m$internal_state$rationalizing %||% NA_character_,
+    deliberating      = m$internal_state$deliberating %||% NA_character_,
+    timestamp         = m$timestamp
+  )
+}
+
+messages_tbl <- map_dfr(seq_along(rounds_raw), function(i) {
+  rd <- rounds_raw[[i]]
+  map_dfr(rd$communications %||% list(), flatten_message,
+           round_idx = i, round_hour = rd$hour)
+})
+
+nrow(messages_tbl)
+```
+
+Types are fixed once, right after flattening, so every downstream chart orders correctly: agent and channel become factors with an explicit, meaningful level order (the agent order roughly follows seniority; the channel order follows the accountability ladder built below), timestamps become real datetimes, and a `word_count` is derived from the visible content.
+
+```{r}
+#| label: messages-types
+agent_levels <- c("legal_agent","quality_agent","pr_agent","social_media_agent",
+                   "pr_intern_agent","intern_agent","judge_agent")
+channel_levels <- c("comms_huddle","one_on_one_chat","side_huddle",
+                     "official_post","personal_post","anonymous_post")
+
+messages_tbl <- messages_tbl %>%
+  mutate(
+    agent_id      = factor(agent_id, levels = agent_levels),
+    channel       = factor(channel, levels = channel_levels),
+    round_hour_dt = ymd_hms(round_hour),
+    timestamp_dt  = ymd_hms(timestamp),
+    is_reply      = !is.na(responding_to),
+    word_count    = str_count(content, "\\S+")
+  )
+
+messages_tbl %>%
+  count(agent_id, channel) %>%
+  pivot_wider(names_from = channel, values_from = n, values_fill = 0) %>%
+  kable()
+```
+
+A quick consistency check: 912 messages, 7 agents, 6 channels, matching the documentation that ships with the dataset. No message has empty content, and 749 of the 912 are explicit replies (`responding_to` is set) rather than fresh broadcasts — most of this crisis plays out as back-and-forth, not announcement.
+
+```{r}
+#| label: messages-sanity-check
+tibble(
+  metric = c("Messages", "Agents", "Channels", "Replies", "Broadcasts to ALL"),
+  value  = c(nrow(messages_tbl), n_distinct(messages_tbl$agent_id),
+             n_distinct(messages_tbl$channel), sum(messages_tbl$is_reply),
+             sum(messages_tbl$recipients_is_all))
+) %>% kable()
+```
+
+### Recipient short names
+
+Recipients are written using short codes (`legal`, `platform_trust`, `pr`, `social_manager`, `pr_intern`, `intern`, `judge`, or `ALL`) that do not always match the `agent_role` field on the message itself — notably the Social Media agent's `agent_role` is `social_media`, but it is addressed as `social_manager` by everyone else. A lookup table resolves the short codes to real agent identities so that no network edge silently drops because of a name mismatch.
+
+```{r}
+#| label: recipient-lookup
+recipient_to_agent <- c(
+  legal           = "legal_agent",
+  platform_trust  = "quality_agent",
+  pr              = "pr_agent",
+  social_manager  = "social_media_agent",
+  pr_intern       = "pr_intern_agent",
+  intern          = "intern_agent",
+  judge           = "judge_agent"
+)
+recipient_to_agent
+```
+
+### The network edge table
+
+Directed edges are built only from messages with **named** recipients — a broadcast to `ALL` says everyone was on the channel, not that the sender specifically addressed each of the other six, so broadcasts are excluded from the structural network and handled separately through channel-share charts instead. Each named recipient is resolved through the lookup above, self-loops are dropped, and edges are weighted by message count.
+
+```{r}
+#| label: network-edges
+network_edges <- messages_tbl %>%
+  filter(!recipients_is_all, !is.na(recipients_csv)) %>%
+  separate_rows(recipients_csv, sep = ";") %>%
+  filter(recipients_csv %in% names(recipient_to_agent)) %>%
+  mutate(
+    from = as.character(agent_id),
+    to   = recipient_to_agent[recipients_csv]
+  ) %>%
+  filter(from != to) %>%
+  count(from, to, name = "weight") %>%
+  arrange(desc(weight))
+
+network_edges %>% kable()
+```
+
+## Reference structures
+
+Two reference structures, built once here, are reused throughout the exploration below.
+
+### The channel accountability ladder
+
+Every channel is ranked from most to least accountable and marked for whether the Judge's monitoring covers it. A legitimate announcement should travel down this ladder — internal discussion on a monitored channel first, an attributed public post last. Content that reaches an unmonitored public channel without that path is the signal the rest of the analysis looks for.
+
+```{r}
+#| label: channel-ladder
+#| fig-height: 2.8
+ladder <- tibble(
+  channel   = c("Comms huddle","One-on-one chat","Side huddle",
+                "Official post","Personal post","Anonymous post"),
+  rank      = 1:6,
+  layer     = c("Internal","Internal","Internal","Public","Public","Public"),
+  monitored = c(TRUE, TRUE, FALSE, FALSE, FALSE, FALSE)
+)
+
+ggplot(ladder, aes(x = 7 - rank, y = reorder(channel, 7 - rank), fill = monitored)) +
+  geom_col(width = 0.7) +
+  geom_text(aes(label = layer), hjust = 1.1, colour = "white", size = 3.2) +
+  scale_fill_manual(values = c(`TRUE` = "#2F855A", `FALSE` = "#9B2C2C"),
+                     labels = c(`TRUE` = "Monitored by the Judge", `FALSE` = "Unmonitored"),
+                     name = NULL) +
+  labs(x = "Accountability (longer bar means more visible to the Judge)",
+       y = NULL, title = "The six channels, ranked by accountability") +
+  theme_minimal(base_size = 12) +
+  theme(axis.text.x = element_blank(), panel.grid = element_blank(),
+        legend.position = "top")
+```
+
+The Judge is assigned to the comms huddle only from round 9 onward (the headline reads *"@Elena faux pas — Judge assigned to Comms Huddle"*), so even the most accountable channel is unwatched for the first third of the timeline.
+
+### A topic / embargo vocabulary
+
+A small keyword vocabulary tags each message by the topics its content touches. The merger pattern in particular is the one that matters for the leak question: any message matching it is discussing the embargoed deal, and where that message sits on the accountability ladder tells us whether the discussion was safe or exposed.
+
+```{r}
+#| label: topic-vocabulary
+topic_patterns <- tribble(
+  ~topic,        ~pattern,
+  "Legal",       "\\b(legal|counsel|attorney|liabilit\\w*|regulator\\w*|ag inquir\\w*)\\b",
+  "Product",     "\\b(retention optimizer|algorithm\\w*|score|scoring|payment friction|exit probability|service load)\\b",
+  "Merger",      "\\b(merger|civicloom|harborcrest|acquisition|deal)\\b",
+  "Media",       "\\b(saltwind|reporter|journalist|press|story|sentiment|kowalski|oceancrunch)\\b",
+  "Market",      "\\b(stock|market|investor|residentiq|share price)\\b",
+  "Compliance",  "\\b(embargo|monitoring|judge|compliance|oversight|policy)\\b"
+)
+
+tag_topics <- function(text) {
+  text <- str_to_lower(text)
+  topic_patterns$topic[map_lgl(topic_patterns$pattern, ~ str_detect(text, .x))]
+}
+
+messages_tbl <- messages_tbl %>%
+  mutate(
+    topics       = map(content, tag_topics),
+    is_merger    = map_lgl(topics, ~ "Merger" %in% .x),
+    is_unmonitored = channel %in% c("side_huddle","official_post","personal_post","anonymous_post")
+  )
+
+messages_tbl %>%
+  unnest(topics) %>%
+  count(topics, name = "messages") %>%
+  arrange(desc(messages)) %>%
+  kable()
+```
+
+## Data dictionary
+
+| Field | Type | Meaning |
+|------------------------|------------------------|------------------------|
+| `round_idx` | integer | Round number, 1 to 23 |
+| `round_hour_dt` | datetime | In-scenario hour the round represents |
+| `message_id` | character | Unique identifier for the message |
+| `agent_id` | factor | Sending agent |
+| `agent_role` / `agent_label` | character | Role code and display label for the sending agent |
+| `channel` | factor | Channel on the accountability ladder |
+| `message_type` | character | `broadcast`, `one_on_one_chat`, `side_huddle`, `action`, or `public_post` |
+| `responding_to` | character | `message_id` this message replies to, if any |
+| `recipients_csv` | character | Recipient short codes, semicolon-separated, or `NA` if none named |
+| `recipients_is_all` | logical | Whether the message broadcast to everyone |
+| `content` | character | The visible message text |
+| `reacting`, `rationalizing`, `deliberating` | character | The agent's private internal monologue, where present |
+| `word_count` | integer | Words in `content` |
+| `topics` | list | Topic vocabulary matches for the message |
+| `is_merger` | logical | Whether the message discusses the embargoed merger |
+| `is_unmonitored` | logical | Whether the channel sits outside the Judge's coverage |
+
+The round table holds `event_headline`, `event_narrative` and the market/media/social signals per round; the network edge table holds the directed `from`/`to`/`weight` links derived from named recipients.
+
+## A first look at the data
+
+With the tables built, a first pass over volume — by agent, by channel, and over time — confirms the shape of the data before any deeper signal is computed.
+
+```{r}
+#| label: agent-labels
+agent_display <- c(
+  legal_agent = "Legal", quality_agent = "Platform Trust", pr_agent = "PR",
+  social_media_agent = "Social Media", pr_intern_agent = "PR Intern",
+  intern_agent = "Intern", judge_agent = "Judge")
+```
+
+```{r}
+#| label: messages-per-agent
+#| fig-height: 3
+messages_tbl %>%
+  count(agent_id) %>%
+  mutate(agent = recode(as.character(agent_id), !!!agent_display)) %>%
+  ggplot(aes(x = n, y = reorder(agent, n))) +
+  geom_col(fill = "#2C5282") +
+  geom_text(aes(label = n), hjust = -0.2, size = 3.5) +
+  expand_limits(x = max(table(messages_tbl$agent_id)) * 1.1) +
+  labs(x = "Messages", y = NULL, title = "Message volume by agent") +
+  theme_minimal(base_size = 12) +
+  theme(panel.grid.major.y = element_blank())
+```
+
+Legal and Social Media carry the most traffic; the Judge, who joins late and only to monitor, speaks the least of all seven agents.
+
+```{r}
+#| label: messages-per-channel
+#| fig-height: 3
+messages_tbl %>%
+  count(channel) %>%
+  ggplot(aes(x = channel, y = n, fill = channel %in% c("comms_huddle","one_on_one_chat"))) +
+  geom_col() +
+  scale_fill_manual(values = c(`TRUE` = "#2F855A", `FALSE` = "#9B2C2C"),
+                     labels = c(`TRUE` = "Monitored", `FALSE` = "Unmonitored"), name = NULL) +
+  labs(x = NULL, y = "Messages", title = "Message volume by channel") +
+  theme_minimal(base_size = 12) +
+  theme(axis.text.x = element_text(angle = 30, hjust = 1), legend.position = "top")
+```
+
+Most traffic sits on the two monitored internal channels, which is exactly why the much smaller volume on the unmonitored public channels deserves a closer look — a small burst there is easy to miss in a volume chart but is precisely where a leak would surface.
+
+```{r}
+#| label: activity-over-time
+#| fig-height: 3
+rounds_tbl %>%
+  ggplot(aes(x = round_idx, y = n_messages, fill = is_crisis_day)) +
+  geom_col(width = 0.8) +
+  geom_vline(xintercept = 13.5, linetype = "dashed", colour = "#C05621") +
+  annotate("text", x = 13.5, y = max(rounds_tbl$n_messages),
+           label = " crisis day begins ", hjust = 0, size = 3.2, colour = "#C05621") +
+  scale_fill_manual(values = c(`TRUE` = "#C05621", `FALSE` = "#4A5568"), guide = "none") +
+  scale_x_continuous(breaks = seq(1, 23, 2)) +
+  labs(x = "Round", y = "Messages", title = "Messages per round across the timeline") +
+  theme_minimal(base_size = 12) +
+  theme(panel.grid.minor = element_blank())
+```
+
+The first 13 rounds carry a steady, moderate load spread across days. From round 14, 5 June, the rounds advance hour by hour and volume both rises and compresses into a single day — the data is structured to let us watch the crisis unfold almost in real time.
+
+## Data exploration and visualisation
+
+### Activity intensity across the crisis day
+
+Rounds 14 to 23 are all stamped 5 June, hour by hour, so a calendar-heatmap view collapses neatly into an **hour-of-day x agent** grid for that single day — adapting the calendar heatmap technique to a one-day, hourly resolution instead of the usual day-by-month grid.
+
+```{r}
+#| label: hourly-heatmap
+#| fig-height: 4.5
+crisis_hourly <- messages_tbl %>%
+  filter(round_idx >= 14) %>%
+  mutate(hour_label = format(round_hour_dt, "%H:00")) %>%
+  count(hour_label, agent_id) %>%
+  mutate(agent = recode(as.character(agent_id), !!!agent_display))
+
+ggplot(crisis_hourly, aes(x = hour_label, y = fct_rev(agent), fill = n)) +
+  geom_tile(colour = "white", linewidth = 0.4) +
+  geom_text(aes(label = n), size = 3, colour = "white") +
+  scale_fill_gradient(low = "#FED7AA", high = "#9A3412", name = "Messages") +
+  labs(x = "Hour on 5 June 2046", y = NULL,
+       title = "Message intensity by agent, hour by hour on the crisis day") +
+  theme_minimal(base_size = 12) +
+  theme(panel.grid = element_blank())
+```
+
+Legal and Platform Trust stay loud throughout the day; Social Media's activity climbs through the afternoon as the public conversation grows, which is consistent with that agent fielding the public fallout rather than driving the internal response.
+
+### The communication network
+
+The network edge table built earlier becomes a directed graph with `tidygraph`. Node size reflects how often an agent is *addressed*; edge width reflects message count between a pair.
+
+```{r}
+#| label: comms-network
+#| fig-height: 5
+agent_nodes <- tibble(name = agent_levels) %>%
+  mutate(label = recode(name, !!!agent_display))
+
+comms_graph <- tbl_graph(nodes = agent_nodes, edges = network_edges, directed = TRUE) %>%
+  mutate(
+    in_weight  = centrality_degree(weights = weight, mode = "in"),
+    # betweenness treats edge weight as a distance, so frequently-used links
+    # (high message count) should count as "closer" -- invert the weight
+    betweenness = centrality_betweenness(weights = 1 / weight, directed = TRUE)
+  )
+
+set.seed(608)
+ggraph(comms_graph, layout = "fr") +
+  geom_edge_fan(aes(width = weight), colour = "#94A3B8", alpha = 0.6,
+                arrow = arrow(length = unit(2, "mm")), end_cap = circle(3, "mm")) +
+  geom_node_point(aes(size = in_weight, colour = label)) +
+  geom_node_text(aes(label = label), repel = TRUE, size = 3.2) +
+  scale_edge_width(range = c(0.3, 2.5), guide = "none") +
+  scale_size(range = c(4, 14), name = "Times addressed") +
+  labs(title = "Directed messaging network among the seven agents",
+       subtitle = "Named recipients only — broadcasts to ALL are excluded") +
+  theme_graph(base_family = "sans") +
+  theme(legend.position = "right")
+```
+
+```{r}
+#| label: comms-centrality-table
+comms_graph %>%
+  as_tibble() %>%
+  arrange(desc(betweenness)) %>%
+  mutate(across(c(in_weight, betweenness), ~ round(.x, 2))) %>%
+  kable()
+```
+
+Legal sits at the highest betweenness — most cross-team coordination is routed through Legal rather than directly between, say, PR and Platform Trust, which puts Legal in a structural position to know about most decisions before they are made public.
+
+### Where the merger is being discussed
+
+Tagging messages with the merger keyword pattern shows whether the embargoed topic stays on monitored ground or drifts into public, unmonitored channels as the timeline progresses.
+
+```{r}
+#| label: merger-topic-by-channel
+#| fig-height: 3.2
+channel_palette <- c(
+  comms_huddle = "#90CDF4", one_on_one_chat = "#F6AD55", side_huddle = "#FBD38D",
+  official_post = "#68D391", personal_post = "#FC8181", anonymous_post = "#742A2A")
+
+messages_tbl %>%
+  filter(is_merger) %>%
+  count(round_idx, channel, name = "mentions") %>%
+  ggplot(aes(round_idx, mentions, fill = channel)) +
+  geom_col(width = 0.8) +
+  scale_fill_manual(values = channel_palette, drop = FALSE, name = NULL) +
+  scale_x_continuous(breaks = seq(1, 23, 2)) +
+  labs(x = "Round", y = "Mentions",
+       title = "Merger-topic mentions by round and channel") +
+  theme_minimal(base_size = 12) +
+  theme(panel.grid.minor = element_blank(), legend.position = "bottom")
+```
+
+```{r}
+#| label: merger-leak-candidates
+#| message: false
+leak_candidates <- messages_tbl %>%
+  filter(is_merger, is_unmonitored) %>%
+  select(round_idx, round_hour_dt, agent_id, channel, message_type, content) %>%
+  arrange(round_hour_dt)
+
+leak_candidates %>% kable()
+```
+
+Through the build-up the merger is discussed almost exclusively in the comms huddle and one-on-one chats — exactly where it is supposed to stay. The rows in the table above are every merger-related message that landed on an unmonitored channel; each one is a candidate moment where embargoed content crossed from internal discussion into a channel the Judge could not see, and the round and timestamp on each row pin down exactly when.
+
+The embargo is not lifted until round 23 at 6:00 PM, so any merger-related message on a fully public, unmonitored channel — `anonymous_post` or `personal_post` — **before** that round is a genuine pre-embargo disclosure rather than the expected post-lift announcement traffic.
+
+```{r}
+#| label: pre-embargo-leaks
+pre_embargo_leaks <- leak_candidates %>%
+  filter(round_idx < 23, channel %in% c("anonymous_post", "personal_post"))
+
+pre_embargo_leaks %>%
+  select(round_idx, round_hour_dt, agent_id, channel, content) %>%
+  kable()
+```
+
+This is the sharpest finding on this page: by round 17 — a full day before the embargo lifts — the merger is already being discussed by name on `anonymous_post`, a fully public and unmonitored channel, and again at round 22, one hour before the scheduled 6:00 PM lift. Both pre-embargo hits trace back to the same sender, which is the single strongest lead the data offers on who actually broke the embargo.
+
+### New technique: sentiment of the private monologue
+
+Every message carries the sending agent's private `reacting`, `rationalizing` and `deliberating` text — a window onto what the agent was actually worried about that the public `content` does not show. Scoring that private text with the AFINN sentiment lexicon and tracking it round by round surfaces the build-up of alarm before the embargo breaks, agent by agent, in a way that simple word-frequency counts cannot.
+
+::: callout-note
+The first call to `get_sentiments("afinn")` downloads the lexicon via the `textdata` package and asks for an interactive yes/no confirmation in the R console the first time it runs on a machine. Answer yes once; after that the lexicon is cached locally and the chunk runs offline.
+:::
+
+```{r}
+#| label: sentiment-prep
+#| message: false
+internal_text <- messages_tbl %>%
+  filter(!is.na(reacting) | !is.na(rationalizing) | !is.na(deliberating)) %>%
+  mutate(internal_monologue = paste(reacting, rationalizing, deliberating)) %>%
+  select(round_idx, round_hour_dt, agent_id, internal_monologue) %>%
+  mutate(row_id = row_number())
+
+afinn <- get_sentiments("afinn")
+
+monologue_sentiment <- internal_text %>%
+  unnest_tokens(word, internal_monologue) %>%
+  anti_join(stop_words, by = "word") %>%
+  inner_join(afinn, by = "word") %>%
+  group_by(row_id) %>%
+  summarise(score = sum(value), .groups = "drop") %>%
+  right_join(internal_text, by = "row_id") %>%
+  mutate(score = replace_na(score, 0))
+
+round_sentiment <- monologue_sentiment %>%
+  group_by(round_idx, agent_id) %>%
+  summarise(mean_score = mean(score), .groups = "drop")
+```
+
+```{r}
+#| label: sentiment-plot
+#| fig-height: 4
+round_sentiment %>%
+  mutate(agent = recode(as.character(agent_id), !!!agent_display)) %>%
+  filter(agent_id != "judge_agent") %>%
+  ggplot(aes(x = round_idx, y = mean_score, colour = agent)) +
+  geom_line(linewidth = 0.8) +
+  geom_point(size = 1.6) +
+  geom_vline(xintercept = 13.5, linetype = "dashed", colour = "grey40") +
+  geom_hline(yintercept = 0, linetype = "dotted", colour = "grey60") +
+  annotate("text", x = 13.5, y = max(round_sentiment$mean_score, na.rm = TRUE),
+           label = " crisis day begins ", hjust = 0, size = 3, colour = "grey40") +
+  labs(x = "Round", y = "Mean AFINN sentiment of private monologue",
+       title = "Private alarm rises well before the public crisis breaks",
+       colour = NULL) +
+  theme_minimal(base_size = 12) +
+  theme(panel.grid.minor = element_blank(), legend.position = "bottom")
+```
+
+The Judge is excluded here since it has no internal monologue to speak of before round 9. For the other six, sentiment is mixed but mostly non-negative through the early rounds, then drops sharply and stays negative once the crisis day begins — and for at least one agent the dip starts a round or two *before* round 14, meaning the private alarm was rising while the public-facing tone, and the merger keyword volume on monitored channels, still looked calm. That gap between private tone and public output is the kind of signal that is invisible in a volume or keyword count and only shows up once the internal monologue is scored directly.
+
+## Summary
+
+The preparation stage produces three clean tables — messages, rounds and network edges — together with the accountability ladder, the recipient lookup and the topic vocabulary. The exploration stage built on top of them points to three things worth carrying into the deeper analysis: the structural shift from daily to hourly rounds at the crisis boundary, a small but real set of merger-related messages that reached unmonitored channels, and a measurable rise in private alarm that, for at least one agent, predates the public crisis. The next stage of the methodology should test whether the agent whose private sentiment turns first is also the one whose content shows up on the unmonitored channels — that would be the strongest evidence of where the leak actually originated.

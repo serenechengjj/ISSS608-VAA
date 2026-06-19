@@ -54,7 +54,10 @@ website:
             href: "Take-Home_Ex/Take-Home_Ex1/Executive_Summary.html"
           - text: "2: Technical Report"
             href: "Take-Home_Ex/Take-Home_Ex2/Take-Home_Ex02.html"
-
+      - text: "Group Project"
+        menu:
+          - text: "EDA"
+            href: "Project/Group_Proj.html"
     right:
       - href: index.qmd
         text: Home
