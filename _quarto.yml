@@ -58,6 +58,10 @@ website:
         menu:
           - text: "EDA"
             href: "Project/Group_Proj.html"
+          - text: "Analytical Computation"
+            href: "Project/Analytical_Computation.html"
+          - text: "Findings"
+            href: "Project/Findings.html"
     right:
       - href: index.qmd
         text: Home

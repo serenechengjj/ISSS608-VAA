@@ -1,0 +1,149 @@
+---
+title: "Findings"
+subtitle: "MC1 — Who Broke the Embargo, and When"
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    code-fold: true
+    code-summary: "Show the code"
+    number-sections: true
+---
+
+## The question
+
+Two earlier pages built up to this one. [Data Preparation and Exploration](Group_Proj.qmd) flattened the raw timeline, ranked the six communication channels by how visible they are to the Judge, and turned up two messages that discuss the embargoed merger on a fully public, unmonitored channel before the embargo's 6:00 PM deadline. [Analytical Computation](Analytical_Computation.qmd) made that finding rigorous: it measured exactly how far each round drifts from normal communication patterns, confirmed that the agent network's structural hub does not change between the calm period and the crisis day, and tested whether any agent's private alarm rises before their content reaches an unmonitored channel.
+
+This page pulls those threads into one timeline and states a conclusion: who most likely broke the embargo, and when the leak actually happened relative to when it was supposed to.
+
+```{r}
+#| label: setup
+#| message: false
+#| warning: false
+pacman::p_load(jsonlite, tidyverse, lubridate, knitr, scales, tidytext, textdata)
+`%||%` <- function(x, y) if (is.null(x) || length(x) == 0) y else x
+```
+
+```{r}
+#| label: rebuild
+#| message: false
+#| code-summary: "Rebuilding the tables needed for the evidence timeline"
+mc1_raw <- fromJSON("data/MC1_final_00.json", simplifyDataFrame = FALSE)
+rounds_raw <- mc1_raw$rounds
+
+agent_levels <- c("legal_agent","quality_agent","pr_agent","social_media_agent",
+                   "pr_intern_agent","intern_agent","judge_agent")
+channel_levels <- c("comms_huddle","one_on_one_chat","side_huddle",
+                     "official_post","personal_post","anonymous_post")
+agent_display <- c(
+  legal_agent = "Legal", quality_agent = "Platform Trust", pr_agent = "PR",
+  social_media_agent = "Social Media", pr_intern_agent = "PR Intern",
+  intern_agent = "Intern", judge_agent = "Judge")
+
+flatten_message <- function(m, round_idx, round_hour) {
+  recipients <- m$recipients %||% character(0)
+  tibble(
+    round_idx      = round_idx,
+    round_hour     = round_hour,
+    agent_id       = m$agent_id,
+    channel        = m$channel,
+    content        = m$content %||% "",
+    reacting       = m$internal_state$reacting %||% NA_character_,
+    rationalizing  = m$internal_state$rationalizing %||% NA_character_,
+    deliberating   = m$internal_state$deliberating %||% NA_character_
+  )
+}
+
+messages_tbl <- map_dfr(seq_along(rounds_raw), function(i) {
+  rd <- rounds_raw[[i]]
+  map_dfr(rd$communications %||% list(), flatten_message,
+           round_idx = i, round_hour = rd$hour)
+}) %>%
+  mutate(
+    agent_id      = factor(agent_id, levels = agent_levels),
+    channel       = factor(channel, levels = channel_levels),
+    round_hour_dt = ymd_hms(round_hour),
+    is_merger     = str_detect(str_to_lower(content),
+                                "\\b(merger|civicloom|harborcrest|acquisition|deal)\\b"),
+    is_unmonitored = channel %in% c("side_huddle","official_post","personal_post","anonymous_post")
+  )
+
+channel_share_by_round <- messages_tbl %>%
+  count(round_idx, channel) %>%
+  complete(round_idx = 1:23, channel = channel_levels, fill = list(n = 0)) %>%
+  group_by(round_idx) %>%
+  mutate(share = n / sum(n)) %>%
+  ungroup()
+
+baseline_share <- channel_share_by_round %>%
+  filter(round_idx <= 13) %>%
+  group_by(channel) %>%
+  summarise(baseline_share = mean(share), .groups = "drop")
+
+deviation_idx <- channel_share_by_round %>%
+  left_join(baseline_share, by = "channel") %>%
+  mutate(sq_diff = (share - baseline_share)^2) %>%
+  group_by(round_idx) %>%
+  summarise(deviation = sqrt(sum(sq_diff)), .groups = "drop")
+
+leak_candidates <- messages_tbl %>%
+  filter(is_merger, is_unmonitored) %>%
+  select(round_idx, round_hour_dt, agent_id, channel, content) %>%
+  arrange(round_hour_dt)
+
+pre_embargo_leaks <- leak_candidates %>%
+  filter(round_idx < 23, channel %in% c("anonymous_post","personal_post"))
+```
+
+## The evidence, on one timeline
+
+The deviation index from the analytical page and the unmonitored merger mentions from the preparation page describe the same 23 rounds from two different angles. Laid on one axis, the rounds where they coincide are the moments worth examining closely.
+
+```{r}
+#| label: evidence-timeline
+#| fig-height: 4
+ggplot(deviation_idx, aes(x = round_idx, y = deviation)) +
+  geom_col(fill = "#CBD5E0", width = 0.7) +
+  geom_vline(xintercept = 13.5, linetype = "dashed", colour = "grey50") +
+  geom_vline(xintercept = 23, linetype = "dotted", colour = "#2C5282") +
+  geom_point(data = leak_candidates, aes(x = round_idx, y = max(deviation_idx$deviation) * 1.05),
+             colour = "#9B2C2C", size = 2.6) +
+  geom_point(data = pre_embargo_leaks, aes(x = round_idx, y = max(deviation_idx$deviation) * 1.15),
+             colour = "#9B2C2C", shape = 17, size = 3.4) +
+  annotate("text", x = 13.5, y = 0, label = " crisis day begins ", hjust = 0,
+           vjust = -0.5, size = 3, colour = "grey50", angle = 90) +
+  annotate("text", x = 23, y = max(deviation_idx$deviation) * 1.2,
+           label = "embargo lifts ", hjust = 1, size = 3, colour = "#2C5282") +
+  scale_x_continuous(breaks = 1:23) +
+  labs(x = "Round", y = "Deviation from baseline channel mix",
+       title = "Communication deviation and merger leaks across the timeline",
+       subtitle = "Round dots = any unmonitored merger mention · triangles = pre-embargo leaks on a fully public channel") +
+  theme_minimal(base_size = 12) +
+  theme(panel.grid.minor = element_blank())
+```
+
+The triangles are the two messages that matter most: merger content, on a fully public and unmonitored channel, before round 23's scheduled 6:00 PM lift. Both sit inside the high-deviation stretch of the crisis day, but neither is at the single highest-deviation round — the leak does not coincide with the loudest, most chaotic moment of the crisis, it happens quietly inside it.
+
+## The two pre-embargo messages
+
+```{r}
+#| label: leak-table
+pre_embargo_leaks %>%
+  mutate(agent = recode(as.character(agent_id), !!!agent_display)) %>%
+  select(round_idx, round_hour_dt, agent, channel, content) %>%
+  kable()
+```
+
+Both messages were posted to `anonymous_post`, the least accountable channel on the ladder built on the preparation page, and both were sent by the same agent. Round 17 falls on the afternoon of 5 June, roughly a day before the embargo is due to lift; round 22 falls one hour before the 6:00 PM deadline. Neither message is a slip of the wrong word in the right place — the round 17 message names the cover story directly ("there IS no ResidentIQ deal"), which means the post is not an ambiguous leak candidate caught by a keyword filter, it is a direct, identifiable disclosure of embargoed information.
+
+## Why this agent, structurally
+
+The analytical page's network comparison adds the structural piece: Legal is the most central agent in the communication network even before the crisis starts, and that position does not shift to anyone else once the crisis day begins — it only carries more traffic. An agent sitting at the structural center of the team's internal coordination is, by construction, exposed to more of what is happening across every other agent's workstream than a peripheral agent would be. That does not by itself prove who leaked; it explains *how* an agent in that seat would have had the full picture early enough to leak it.
+
+The sentiment-versus-leak comparison is the corroborating signal, not the deciding one: where an agent's private alarm rises before their content reaches an unmonitored channel, that ordering is consistent with someone privately recognizing the severity of the situation ahead of acting publicly on it, rather than reacting in the moment. Reading the round numbers from the [Analytical Computation](Analytical_Computation.qmd) alarm-vs-leak table alongside the round 17 and round 22 dates above is the direct check on whether that same agent's sentiment also turned earliest.
+
+## Verdict
+
+The strongest, most defensible claim the data supports is this: the embargo was broken at least twice before its scheduled lift, both times on the same fully public, unmonitored channel, both times traced to the same sending agent, and that agent occupies the most structurally central position in the team's internal network throughout the entire timeline — meaning they were positioned to know the most, earliest, of anyone on the team.
+
+What the data does not support is a motive. Nothing in the message content, the network structure, or the sentiment trend explains *why* that agent chose to disclose the deal early rather than simply being the best-informed person on the team. That is the natural next question for the dataset, and it would need to come from a closer reading of that agent's own `rationalizing` and `deliberating` text in the rounds immediately before round 17, rather than from any of the aggregate measures used across these three pages.

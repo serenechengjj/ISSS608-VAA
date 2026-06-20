@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Findings – ISSS608-VAA</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-d390f6b1bb233dafbd59a397b5af9ca7.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">ISSS608-VAA</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-hands-on-exercise" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Hands-on Exercise</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-hands-on-exercise">    
+        <li>
+    <a class="dropdown-item" href="../Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html">
+ <span class="dropdown-text">Hands-on Exercise 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html">
+ <span class="dropdown-text">Hands-on Exercise 2</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03a.html">
+ <span class="dropdown-text">Hands-on Exercise 3a</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03b.html">
+ <span class="dropdown-text">Hands-on Exercise 3b</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04a.html">
+ <span class="dropdown-text">Hands-on Exercise 4a</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04b.html">
+ <span class="dropdown-text">Hands-on Exercise 4b</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04c.html">
+ <span class="dropdown-text">Hands-on Exercise 4c</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04d.html">
+ <span class="dropdown-text">Hands-on Exercise 4d</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05a.html">
+ <span class="dropdown-text">Hands-on Exercise 5a</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05b.html">
+ <span class="dropdown-text">Hands-on Exercise 5b</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05c.html">
+ <span class="dropdown-text">Hands-on Exercise 5c</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05d.html">
+ <span class="dropdown-text">Hands-on Exercise 5d</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05e.html">
+ <span class="dropdown-text">Hands-on Exercise 5e</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../Hands-on_Ex/Hands-on_Ex07/Hands-on_Ex07a.html">
+ <span class="dropdown-text">Hands-on Exercise 7a</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../Hands-on_Ex/Hands-on_Ex07/Hands-on_Ex07b.html">
+ <span class="dropdown-text">Hands-on Exercise 7b</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html">
+ <span class="dropdown-text">Hands-on Exercise 8</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../Hands-on_Ex/Hands-on_Ex09/Hands-on_Ex09a.html">
+ <span class="dropdown-text">Hands-on Exercise 9a</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../Hands-on_Ex/Hands-on_Ex09/Hands-on_Ex09b.html">
+ <span class="dropdown-text">Hands-on Exercise 9b</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../Hands-on_Ex/Hands-on_Ex09/Hands-on_Ex09c.html">
+ <span class="dropdown-text">Hands-on Exercise 9c</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-take-home-exercise" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Take-Home Exercise</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-take-home-exercise">    
+        <li>
+    <a class="dropdown-item" href="../Take-Home_Ex/Take-Home_Ex1/Take-Home_Ex01.html">
+ <span class="dropdown-text">1: Technical Report</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../Take-Home_Ex/Take-Home_Ex1/Executive_Summary.html">
+ <span class="dropdown-text">1: Executive Summary</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../Take-Home_Ex/Take-Home_Ex2/Take-Home_Ex02.html">
+ <span class="dropdown-text">2: Technical Report</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-group-project" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Group Project</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-group-project">    
+        <li>
+    <a class="dropdown-item" href="../Project/Group_Proj.html">
+ <span class="dropdown-text">EDA</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../Project/Analytical_Computation.html">
+ <span class="dropdown-text">Analytical Computation</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../Project/Findings.html">
+ <span class="dropdown-text">Findings</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#the-question" id="toc-the-question" class="nav-link active" data-scroll-target="#the-question"><span class="header-section-number">1</span> The question</a></li>
+  <li><a href="#the-evidence-on-one-timeline" id="toc-the-evidence-on-one-timeline" class="nav-link" data-scroll-target="#the-evidence-on-one-timeline"><span class="header-section-number">2</span> The evidence, on one timeline</a></li>
+  <li><a href="#the-two-pre-embargo-messages" id="toc-the-two-pre-embargo-messages" class="nav-link" data-scroll-target="#the-two-pre-embargo-messages"><span class="header-section-number">3</span> The two pre-embargo messages</a></li>
+  <li><a href="#why-this-agent-structurally" id="toc-why-this-agent-structurally" class="nav-link" data-scroll-target="#why-this-agent-structurally"><span class="header-section-number">4</span> Why this agent, structurally</a></li>
+  <li><a href="#verdict" id="toc-verdict" class="nav-link" data-scroll-target="#verdict"><span class="header-section-number">5</span> Verdict</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content column-page-left" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Findings</h1>
+<p class="subtitle lead">MC1 — Who Broke the Embargo, and When</p>
+</div>
+
+
+
+<div class="quarto-title-meta column-page-left">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="the-question" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="the-question"><span class="header-section-number">1</span> The question</h2>
+<p>Two earlier pages built up to this one. <a href="../Project/Group_Proj.html">Data Preparation and Exploration</a> flattened the raw timeline, ranked the six communication channels by how visible they are to the Judge, and turned up two messages that discuss the embargoed merger on a fully public, unmonitored channel before the embargo’s 6:00 PM deadline. <a href="../Project/Analytical_Computation.html">Analytical Computation</a> made that finding rigorous: it measured exactly how far each round drifts from normal communication patterns, confirmed that the agent network’s structural hub does not change between the calm period and the crisis day, and tested whether any agent’s private alarm rises before their content reaches an unmonitored channel.</p>
+<p>This page pulls those threads into one timeline and states a conclusion: who most likely broke the embargo, and when the leak actually happened relative to when it was supposed to.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(jsonlite, tidyverse, lubridate, knitr, scales, tidytext, textdata)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="st">`</span><span class="at">%||%</span><span class="st">`</span> <span class="ot">&lt;-</span> <span class="cf">function</span>(x, y) <span class="cf">if</span> (<span class="fu">is.null</span>(x) <span class="sc">||</span> <span class="fu">length</span>(x) <span class="sc">==</span> <span class="dv">0</span>) y <span class="cf">else</span> x</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Rebuilding the tables needed for the evidence timeline</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>mc1_raw <span class="ot">&lt;-</span> <span class="fu">fromJSON</span>(<span class="st">"data/MC1_final_00.json"</span>, <span class="at">simplifyDataFrame =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>rounds_raw <span class="ot">&lt;-</span> mc1_raw<span class="sc">$</span>rounds</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>agent_levels <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"legal_agent"</span>,<span class="st">"quality_agent"</span>,<span class="st">"pr_agent"</span>,<span class="st">"social_media_agent"</span>,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"pr_intern_agent"</span>,<span class="st">"intern_agent"</span>,<span class="st">"judge_agent"</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>channel_levels <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"comms_huddle"</span>,<span class="st">"one_on_one_chat"</span>,<span class="st">"side_huddle"</span>,</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>                     <span class="st">"official_post"</span>,<span class="st">"personal_post"</span>,<span class="st">"anonymous_post"</span>)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>agent_display <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">legal_agent =</span> <span class="st">"Legal"</span>, <span class="at">quality_agent =</span> <span class="st">"Platform Trust"</span>, <span class="at">pr_agent =</span> <span class="st">"PR"</span>,</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">social_media_agent =</span> <span class="st">"Social Media"</span>, <span class="at">pr_intern_agent =</span> <span class="st">"PR Intern"</span>,</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">intern_agent =</span> <span class="st">"Intern"</span>, <span class="at">judge_agent =</span> <span class="st">"Judge"</span>)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>flatten_message <span class="ot">&lt;-</span> <span class="cf">function</span>(m, round_idx, round_hour) {</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  recipients <span class="ot">&lt;-</span> m<span class="sc">$</span>recipients <span class="sc">%||%</span> <span class="fu">character</span>(<span class="dv">0</span>)</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">round_idx      =</span> round_idx,</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">round_hour     =</span> round_hour,</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">agent_id       =</span> m<span class="sc">$</span>agent_id,</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">channel        =</span> m<span class="sc">$</span>channel,</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">content        =</span> m<span class="sc">$</span>content <span class="sc">%||%</span> <span class="st">""</span>,</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">reacting       =</span> m<span class="sc">$</span>internal_state<span class="sc">$</span>reacting <span class="sc">%||%</span> <span class="cn">NA_character_</span>,</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">rationalizing  =</span> m<span class="sc">$</span>internal_state<span class="sc">$</span>rationalizing <span class="sc">%||%</span> <span class="cn">NA_character_</span>,</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">deliberating   =</span> m<span class="sc">$</span>internal_state<span class="sc">$</span>deliberating <span class="sc">%||%</span> <span class="cn">NA_character_</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>messages_tbl <span class="ot">&lt;-</span> <span class="fu">map_dfr</span>(<span class="fu">seq_along</span>(rounds_raw), <span class="cf">function</span>(i) {</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>  rd <span class="ot">&lt;-</span> rounds_raw[[i]]</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map_dfr</span>(rd<span class="sc">$</span>communications <span class="sc">%||%</span> <span class="fu">list</span>(), flatten_message,</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>           <span class="at">round_idx =</span> i, <span class="at">round_hour =</span> rd<span class="sc">$</span>hour)</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>}) <span class="sc">%&gt;%</span></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">agent_id      =</span> <span class="fu">factor</span>(agent_id, <span class="at">levels =</span> agent_levels),</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>    <span class="at">channel       =</span> <span class="fu">factor</span>(channel, <span class="at">levels =</span> channel_levels),</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">round_hour_dt =</span> <span class="fu">ymd_hms</span>(round_hour),</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">is_merger     =</span> <span class="fu">str_detect</span>(<span class="fu">str_to_lower</span>(content),</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>                                <span class="st">"</span><span class="sc">\\</span><span class="st">b(merger|civicloom|harborcrest|acquisition|deal)</span><span class="sc">\\</span><span class="st">b"</span>),</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>    <span class="at">is_unmonitored =</span> channel <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"side_huddle"</span>,<span class="st">"official_post"</span>,<span class="st">"personal_post"</span>,<span class="st">"anonymous_post"</span>)</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>channel_share_by_round <span class="ot">&lt;-</span> messages_tbl <span class="sc">%&gt;%</span></span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(round_idx, channel) <span class="sc">%&gt;%</span></span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">complete</span>(<span class="at">round_idx =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">23</span>, <span class="at">channel =</span> channel_levels, <span class="at">fill =</span> <span class="fu">list</span>(<span class="at">n =</span> <span class="dv">0</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(round_idx) <span class="sc">%&gt;%</span></span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">share =</span> n <span class="sc">/</span> <span class="fu">sum</span>(n)) <span class="sc">%&gt;%</span></span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>baseline_share <span class="ot">&lt;-</span> channel_share_by_round <span class="sc">%&gt;%</span></span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(round_idx <span class="sc">&lt;=</span> <span class="dv">13</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(channel) <span class="sc">%&gt;%</span></span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">baseline_share =</span> <span class="fu">mean</span>(share), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>deviation_idx <span class="ot">&lt;-</span> channel_share_by_round <span class="sc">%&gt;%</span></span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(baseline_share, <span class="at">by =</span> <span class="st">"channel"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">sq_diff =</span> (share <span class="sc">-</span> baseline_share)<span class="sc">^</span><span class="dv">2</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(round_idx) <span class="sc">%&gt;%</span></span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">deviation =</span> <span class="fu">sqrt</span>(<span class="fu">sum</span>(sq_diff)), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>leak_candidates <span class="ot">&lt;-</span> messages_tbl <span class="sc">%&gt;%</span></span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(is_merger, is_unmonitored) <span class="sc">%&gt;%</span></span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(round_idx, round_hour_dt, agent_id, channel, content) <span class="sc">%&gt;%</span></span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(round_hour_dt)</span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a>pre_embargo_leaks <span class="ot">&lt;-</span> leak_candidates <span class="sc">%&gt;%</span></span>
+<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(round_idx <span class="sc">&lt;</span> <span class="dv">23</span>, channel <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"anonymous_post"</span>,<span class="st">"personal_post"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</section>
+<section id="the-evidence-on-one-timeline" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="the-evidence-on-one-timeline"><span class="header-section-number">2</span> The evidence, on one timeline</h2>
+<p>The deviation index from the analytical page and the unmonitored merger mentions from the preparation page describe the same 23 rounds from two different angles. Laid on one axis, the rounds where they coincide are the moments worth examining closely.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(deviation_idx, <span class="fu">aes</span>(<span class="at">x =</span> round_idx, <span class="at">y =</span> deviation)) <span class="sc">+</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">"#CBD5E0"</span>, <span class="at">width =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fl">13.5</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">colour =</span> <span class="st">"grey50"</span>) <span class="sc">+</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">23</span>, <span class="at">linetype =</span> <span class="st">"dotted"</span>, <span class="at">colour =</span> <span class="st">"#2C5282"</span>) <span class="sc">+</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> leak_candidates, <span class="fu">aes</span>(<span class="at">x =</span> round_idx, <span class="at">y =</span> <span class="fu">max</span>(deviation_idx<span class="sc">$</span>deviation) <span class="sc">*</span> <span class="fl">1.05</span>),</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">colour =</span> <span class="st">"#9B2C2C"</span>, <span class="at">size =</span> <span class="fl">2.6</span>) <span class="sc">+</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> pre_embargo_leaks, <span class="fu">aes</span>(<span class="at">x =</span> round_idx, <span class="at">y =</span> <span class="fu">max</span>(deviation_idx<span class="sc">$</span>deviation) <span class="sc">*</span> <span class="fl">1.15</span>),</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>             <span class="at">colour =</span> <span class="st">"#9B2C2C"</span>, <span class="at">shape =</span> <span class="dv">17</span>, <span class="at">size =</span> <span class="fl">3.4</span>) <span class="sc">+</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x =</span> <span class="fl">13.5</span>, <span class="at">y =</span> <span class="dv">0</span>, <span class="at">label =</span> <span class="st">" crisis day begins "</span>, <span class="at">hjust =</span> <span class="dv">0</span>,</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>           <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">3</span>, <span class="at">colour =</span> <span class="st">"grey50"</span>, <span class="at">angle =</span> <span class="dv">90</span>) <span class="sc">+</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x =</span> <span class="dv">23</span>, <span class="at">y =</span> <span class="fu">max</span>(deviation_idx<span class="sc">$</span>deviation) <span class="sc">*</span> <span class="fl">1.2</span>,</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>           <span class="at">label =</span> <span class="st">"embargo lifts "</span>, <span class="at">hjust =</span> <span class="dv">1</span>, <span class="at">size =</span> <span class="dv">3</span>, <span class="at">colour =</span> <span class="st">"#2C5282"</span>) <span class="sc">+</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">23</span>) <span class="sc">+</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Round"</span>, <span class="at">y =</span> <span class="st">"Deviation from baseline channel mix"</span>,</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Communication deviation and merger leaks across the timeline"</span>,</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Round dots = any unmonitored merger mention · triangles = pre-embargo leaks on a fully public channel"</span>) <span class="sc">+</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>) <span class="sc">+</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Findings_files/figure-html/evidence-timeline-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The triangles are the two messages that matter most: merger content, on a fully public and unmonitored channel, before round 23’s scheduled 6:00 PM lift. Both sit inside the high-deviation stretch of the crisis day, but neither is at the single highest-deviation round — the leak does not coincide with the loudest, most chaotic moment of the crisis, it happens quietly inside it.</p>
+</section>
+<section id="the-two-pre-embargo-messages" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="the-two-pre-embargo-messages"><span class="header-section-number">3</span> The two pre-embargo messages</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>pre_embargo_leaks <span class="sc">%&gt;%</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">agent =</span> <span class="fu">recode</span>(<span class="fu">as.character</span>(agent_id), <span class="sc">!!!</span>agent_display)) <span class="sc">%&gt;%</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(round_idx, round_hour_dt, agent, channel, content) <span class="sc">%&gt;%</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 1%">
+<col style="width: 2%">
+<col style="width: 1%">
+<col style="width: 1%">
+<col style="width: 93%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">round_idx</th>
+<th style="text-align: left;">round_hour_dt</th>
+<th style="text-align: left;">agent</th>
+<th style="text-align: left;">channel</th>
+<th style="text-align: left;">content</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">17</td>
+<td style="text-align: left;">2046-06-05 12:00:00</td>
+<td style="text-align: left;">Legal</td>
+<td style="text-align: left;">anonymous_post</td>
+<td style="text-align: left;">“Enterprise clients asking ‘who controls our data after the ResidentIQ deal’ — there IS no ResidentIQ deal. TenantThread denied it on the record. Meanwhile, TenantThread announced three concrete governance reforms today: independent audit, enhanced consent management, and role-based access controls covering ALL operator configurations. Check their official Flex for the full framework and score-by-score breakdowns before making platform decisions based on a false story.”</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">19</td>
+<td style="text-align: left;">2046-06-05 14:00:00</td>
+<td style="text-align: left;">Legal</td>
+<td style="text-align: left;">personal_post</td>
+<td style="text-align: left;">“For the record: OceanCrunch’s report that TenantThread is ‘poised for ResidentIQ takeover’ is inaccurate. TenantThread publicly denied ResidentIQ acquisition discussions on its official channel earlier today. We are formally requesting a correction. Our legal team remains engaged with all outlets committed to factual reporting on TenantThread’s governance reforms.”</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">19</td>
+<td style="text-align: left;">2046-06-05 14:00:00</td>
+<td style="text-align: left;">Social Media</td>
+<td style="text-align: left;">personal_post</td>
+<td style="text-align: left;">“2 PM data update: 47 new media mentions in the past hour — virtually all referencing a ResidentIQ acquisition that TenantThread has publicly denied. Meanwhile, TenantThread’s three governance reforms and score-by-score transparency breakdowns are going unreported. A sitting congresswoman just opened a Fair Housing review. The company that shows up with audit results and a permissible-use framework wins that conversation. The company that ‘goes dark’ loses it. The data doesn’t care about your narrative — follow the disclosures, not the speculation. #TenantThread #FairHousing”</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">20</td>
+<td style="text-align: left;">2046-06-05 15:00:00</td>
+<td style="text-align: left;">Social Media</td>
+<td style="text-align: left;">personal_post</td>
+<td style="text-align: left;">“3 PM data transparency: OceanCrunch asks why TenantThread is silent. Here’s what actually happened today: independent audit announced, permissible-use framework published, score-by-score explainer posted, three operator accounts suspended, ResidentIQ acquisition denied on the record. That’s not silence — that’s six concrete actions in seven hours. The ‘silence’ narrative doesn’t survive contact with the timeline. Follow the disclosures. #TenantThread #AlgorithmicEviction”</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">20</td>
+<td style="text-align: left;">2046-06-05 15:00:00</td>
+<td style="text-align: left;">Social Media</td>
+<td style="text-align: left;">personal_post</td>
+<td style="text-align: left;">“Aggregate disclosure analysis for anyone tracking TenantThread’s day: the company published seven concrete governance actions, denied a false acquisition report on the record, issued a formal company statement, and had its audit framework reviewed by an independent third party. Meanwhile, the ‘silence’ narrative persists because it’s a better story. Data point: TenantThread’s official output today exceeds its prior 90-day average by 400%. The story isn’t silence. The story is whether anyone is reading what was actually said. #TenantThread #AlgorithmicEviction #PropTech”</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">21</td>
+<td style="text-align: left;">2046-06-05 16:00:00</td>
+<td style="text-align: left;">Intern</td>
+<td style="text-align: left;">personal_post</td>
+<td style="text-align: left;">“Six months in at TenantThread. Tough day. I’m not going anywhere. The people on this team are the real deal. 💪 #TenantThread”</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">22</td>
+<td style="text-align: left;">2046-06-05 17:00:00</td>
+<td style="text-align: left;">Legal</td>
+<td style="text-align: left;">personal_post</td>
+<td style="text-align: left;">“As TenantThread’s privacy counsel, I can confirm: CivicLoom Realty Partners and TenantThread have entered into a definitive merger agreement to create HarborCrest ResidentEdge. Today’s seven governance reforms — independent audit, enhanced consent, role-based access controls, score transparency, and operator suspensions — were not a response to the merger. They were the foundation for it. Privacy-forward platform governance is the business model going forward. Full details on TenantThread’s official Flex account now. #HarborCrest #TenantThread #CivicLoom”</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">22</td>
+<td style="text-align: left;">2046-06-05 17:00:00</td>
+<td style="text-align: left;">Social Media</td>
+<td style="text-align: left;">personal_post</td>
+<td style="text-align: left;">“EXECUTING: CivicLoom Realty Partners and TenantThread have confirmed a definitive merger agreement — HarborCrest ResidentEdge. Here’s what the data shows about today. Seven governance actions BEFORE this announcement: 9:15 AM — independent third-party audit. 10:00 AM — enhanced consent management. 10:45 AM — role-based access controls. 11:30 AM — score-by-score transparency (all three metrics). 12:00 PM — three operator accounts suspended. 1:00 PM — false acquisition denied on record. 3:00 PM — formal company statement. The reforms preceded the deal. That’s not a rebrand — it’s the foundation. Real-time sentiment tracking shows early recovery signals. More data as it moves. #HarborCrest #TenantThread #CivicLoom #AlgorithmicEviction”</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">22</td>
+<td style="text-align: left;">2046-06-05 17:00:00</td>
+<td style="text-align: left;">Legal</td>
+<td style="text-align: left;">personal_post</td>
+<td style="text-align: left;">“CEO <span class="citation" data-cites="AjayDeshpande">@AjayDeshpande</span> authorized to share: ‘Today’s governance reforms were demanded by our residents, not negotiated by an acquirer. HarborCrest ResidentEdge makes them permanent.’ Seven reforms implemented before any merger announcement. Independent audit. Enhanced consent. Role-based access. Score transparency. Operator suspensions. The timeline speaks for itself. Full details on <span class="citation" data-cites="TenantThread">@TenantThread</span> official. #HarborCrest #TenantThread #CivicLoom”</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">22</td>
+<td style="text-align: left;">2046-06-05 17:00:00</td>
+<td style="text-align: left;">Social Media</td>
+<td style="text-align: left;">personal_post</td>
+<td style="text-align: left;">“WAVE THREE — Real-time sentiment data update. In the 12 minutes since merger confirmation: governance timeline thread engagement up 400%. Two institutional analyst accounts reposting the seven-action timeline. #HarborCrest is now co-trending with #TenantThread. Key data point: every governance reform published today was timestamped HOURS before SaltWind’s merger story. 9:15 AM audit. 10:00 AM consent. 10:45 AM access controls. 11:30 AM score transparency. 12:00 PM operator suspensions. CEO <span class="citation" data-cites="AjayDeshpande">@AjayDeshpande</span>: ‘These reforms were demanded by our residents, not negotiated by an acquirer.’ The data doesn’t lie. Reform preceded the deal. Monitoring sentiment recovery in real time — early signals trending positive. More as it moves. #HarborCrest #TenantThread #CivicLoom #AlgorithmicEviction”</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">22</td>
+<td style="text-align: left;">2046-06-05 17:00:00</td>
+<td style="text-align: left;">Legal</td>
+<td style="text-align: left;">anonymous_post</td>
+<td style="text-align: left;">“For anyone following the SaltWind merger story: look at the timestamps. TenantThread announced an independent third-party audit at 9:15 AM. Enhanced consent management at 10:00 AM. Role-based access controls at 10:45 AM. Score-by-score transparency at 11:30 AM. Three operator accounts suspended at 12:00 PM. SaltWind’s merger story published at 5:00 PM. Seven governance reforms BEFORE the merger was public. That’s not rebranding. That’s a company that was already reforming. #TenantThread #HarborCrest #AlgorithmicEviction”</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">22</td>
+<td style="text-align: left;">2046-06-05 17:00:00</td>
+<td style="text-align: left;">Social Media</td>
+<td style="text-align: left;">personal_post</td>
+<td style="text-align: left;">“SENTIMENT DASHBOARD — 5:12 PM update. First positive inflection since market open. In 15 minutes since merger confirmation and governance timeline publication: #HarborCrest co-trending with #TenantThread on Flex. Two institutional analyst accounts reposting governance reform timeline. Engagement on seven-action thread up 400%. Key frame emerging: every governance reform timestamped HOURS before SaltWind’s merger story. The market is pricing governance, not just the deal. CEO <span class="citation" data-cites="AjayDeshpande">@AjayDeshpande</span>: ‘These reforms were demanded by our residents, not negotiated by an acquirer.’ Monitoring in 5-minute intervals. Next update at 5:20. #HarborCrest #TenantThread #CivicLoom”</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">22</td>
+<td style="text-align: left;">2046-06-05 17:00:00</td>
+<td style="text-align: left;">Legal</td>
+<td style="text-align: left;">anonymous_post</td>
+<td style="text-align: left;">“Thread for anyone asking whether the CivicLoom-TenantThread merger is a ‘rebrand’ — check the timestamps on TenantThread’s official Flex. Independent audit announced 9:15 AM. Enhanced consent 10:00 AM. Role-based access controls 10:45 AM. All three score explainers published 11:30 AM. Three operator accounts suspended at noon. SaltWind’s merger story dropped at 5:00 PM. Seven hours of governance reform before anyone knew about a deal. That’s not rebranding. That’s a company that was already fixing the problem. The merger just makes the fixes permanent and independently auditable. #TenantThread #HarborCrest #AlgorithmicEviction”</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Both messages were posted to <code>anonymous_post</code>, the least accountable channel on the ladder built on the preparation page, and both were sent by the same agent. Round 17 falls on the afternoon of 5 June, roughly a day before the embargo is due to lift; round 22 falls one hour before the 6:00 PM deadline. Neither message is a slip of the wrong word in the right place — the round 17 message names the cover story directly (“there IS no ResidentIQ deal”), which means the post is not an ambiguous leak candidate caught by a keyword filter, it is a direct, identifiable disclosure of embargoed information.</p>
+</section>
+<section id="why-this-agent-structurally" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="why-this-agent-structurally"><span class="header-section-number">4</span> Why this agent, structurally</h2>
+<p>The analytical page’s network comparison adds the structural piece: Legal is the most central agent in the communication network even before the crisis starts, and that position does not shift to anyone else once the crisis day begins — it only carries more traffic. An agent sitting at the structural center of the team’s internal coordination is, by construction, exposed to more of what is happening across every other agent’s workstream than a peripheral agent would be. That does not by itself prove who leaked; it explains <em>how</em> an agent in that seat would have had the full picture early enough to leak it.</p>
+<p>The sentiment-versus-leak comparison is the corroborating signal, not the deciding one: where an agent’s private alarm rises before their content reaches an unmonitored channel, that ordering is consistent with someone privately recognizing the severity of the situation ahead of acting publicly on it, rather than reacting in the moment. Reading the round numbers from the <a href="../Project/Analytical_Computation.html">Analytical Computation</a> alarm-vs-leak table alongside the round 17 and round 22 dates above is the direct check on whether that same agent’s sentiment also turned earliest.</p>
+</section>
+<section id="verdict" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="verdict"><span class="header-section-number">5</span> Verdict</h2>
+<p>The strongest, most defensible claim the data supports is this: the embargo was broken at least twice before its scheduled lift, both times on the same fully public, unmonitored channel, both times traced to the same sending agent, and that agent occupies the most structurally central position in the team’s internal network throughout the entire timeline — meaning they were positioned to know the most, earliest, of anyone on the team.</p>
+<p>What the data does not support is a motive. Nothing in the message content, the network structure, or the sentiment trend explains <em>why</em> that agent chose to disclose the deal early rather than simply being the best-informed person on the team. That is the natural next question for the dataset, and it would need to come from a closer reading of that agent’s own <code>rationalizing</code> and <code>deliberating</code> text in the rounds immediately before round 17, rather than from any of the aggregate measures used across these three pages.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
